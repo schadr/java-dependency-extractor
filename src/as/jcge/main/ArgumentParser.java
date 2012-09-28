@@ -31,9 +31,10 @@ public class ArgumentParser {
 	}
 	
 	public static Map<String, String> parseArguments(String[] args) {
-		Map<String,String> optArgs = new HashMap<String,String>();
+		Map<String,String> optArgs = createDefaultOptions();
 		String arg;
 		boolean okArg = false;
+		
 		for (int i = 0; i < args.length; i++) {
 			okArg = false;
 			arg = args[i];
@@ -66,6 +67,15 @@ public class ArgumentParser {
 			}
 		}
 		
+		return optArgs;
+	}
+
+	private static Map<String, String> createDefaultOptions() {
+		Map<String,String> optArgs = new HashMap<String,String>();
+				
+		optArgs.put(OPT_OUTPUT_FORMAT, OUTPUT_XML);
+		optArgs.put(OPT_REPOSITORY, REPOSITORY_GIT);
+				
 		return optArgs;
 	}
 
