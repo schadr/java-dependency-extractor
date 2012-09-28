@@ -1,19 +1,24 @@
 package as.jcge.main;
 
+import java.util.Map;
+
 import as.jcge.db.DatabaseConnector;
 
 
-public class Main
-{
+public class Main {
+	
+	
 	public static void main(String[] args) {
+		Map<String,String> optArgs = ArgumentParser.parseArguments(args);
+		
+		
 		System.out.println("TNG developed by eggnet.");
 		System.out.println();
 		try {
 			if (args.length < 4 ) {
 				System.out.println("Retry: TNG [dbname] [repository] [branch] [configFile] <commitFile> <port>");
 				throw new ArrayIndexOutOfBoundsException();
-			}
-			else {
+			} else {
 				try  {
 					// Set up the resources
 					Resources.dbName = args[0];
@@ -41,13 +46,11 @@ public class Main
 						nb.buildNetworks();
 					
 					db.close();
-				} 
-				catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				} 
 			}
-		}
-		catch (ArrayIndexOutOfBoundsException e) {
+		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
 	}
