@@ -36,7 +36,7 @@ public class SCMIterator {
 		return fCommits.size()-1 > fCurrentCommit ;
 	}
 
-	public CallGraph next() {
+	synchronized public CallGraph next() {
 		fCurrentCommit++;
 		String commitID = fCommits.get(fCurrentCommit);
 		

@@ -1,7 +1,6 @@
 package as.jcge.models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,21 +9,16 @@ import as.jcge.scm.Commit;
 public class CallGraph {
 	private Map<String, Method> methods;
 	private Map<Method, List<Method>> invokes;
-
-	public CallGraph() {
-		methods = new HashMap<String, Method>();
-		invokes = new HashMap<Method, List<Method>>();
-	}
-
-	public CallGraph(Map<String, Method> methods, Map<Method, List<Method>> invokes) {
-		this.methods = methods;
-		this.invokes = invokes;
-	}
+	private Commit fCommit;
 	
 	public CallGraph(Commit commit) {
-		// TODO Auto-generated constructor stub
+		fCommit = commit;
 	}
 
+	public Commit getCommit() {
+		return fCommit;
+	}
+	
 	public void addMethod(Method method) {
 		if(methods.containsKey(method.toString())) {
 			// Update
@@ -53,22 +47,15 @@ public class CallGraph {
 		}
 	}
 	
-	public List<Pair<Method, Float>> getChangedMethods(String file, int start, int end) {
-		List<Pair<Method, Float>> changedMethods = new ArrayList<Pair<Method, Float>>();
+	public List<Method> getChangedMethods(String file, int start, int end) {
+		List<Method> changedMethods = new ArrayList<Method>();
 		
 		for(Map.Entry<String, Method> entry: methods.entrySet()) {
 			Method method = entry.getValue();
 			if(method.getFile() == null)
 				continue;
-			if(method.getFile().equals(file) &&
-					(Math.min(end, method.getEnd()) - Math.max(start, method.getStart()) >= 0)) {
-				Pair<Method, Float> pair = new Pair<Method, Float>(method, 0.0f);
-				// Add real weight
-				pair.setSecond((Math.min(end, pair.getFirst().getEnd()) - 
-						Math.max(start, pair.getFirst().getStart()) + 1)/
-						(float)(pair.getFirst().getEnd() - pair.getFirst().getStart() + 1));
-				
-				changedMethods.add(pair);
+			if(method.getFile().equals(file) && (Math.min(end, method.getEnd()) - Math.max(start, method.getStart()) >= 0)) {
+				changedMethods.add(method);
 			}
 		}
 		
