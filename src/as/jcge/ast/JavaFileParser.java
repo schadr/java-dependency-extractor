@@ -6,9 +6,9 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -18,12 +18,12 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import as.jcge.main.Resources;
 import as.jcge.models.CallGraph;
 
-public class Parser {
-	private Set<String> fClassPath;
-	private Set<String> fSourcePath;
+public class JavaFileParser {
+	private Collection<String> fClassPath;
+	private Collection<String> fSourcePath;
 	private List<String> fEncodings;
 	
-	public Parser(Set<String> classPath, Set<String> sourcePath) {
+	public JavaFileParser(Collection<String> classPath, Collection<String> sourcePath) {
 		fClassPath = classPath;
 		fSourcePath = sourcePath;
 		fEncodings = new ArrayList<String>();
@@ -33,7 +33,7 @@ public class Parser {
 	 * Parsers a given file using the ASTParser.
 	 * @param file
 	 */
-	public void parseFile(String file, CallGraph cg) {
+	public CompilationUnit parseFile(String file, CallGraph cg) {
 		// Create parse for JRE 1.0 - 1.6
 		ASTParser parser= ASTParser.newParser(AST.JLS3);
 
@@ -52,23 +52,22 @@ public class Parser {
 		// Set up the file to parse
 		String fileRaw = readFile(file);
 		if(fileRaw == null)
-			return;
+			return null;
 		parser.setSource(fileRaw.toCharArray());
 		String unitName = generateUnitName(file);
 		if(unitName == null)
-			return;
+			return null;
 		parser.setUnitName(unitName);
 
 		
 		// Parse
 		CompilationUnit unit = (CompilationUnit) parser.createAST(null);
 
+		return unit;
 		
 		// Visit the syntax tree
-		Visitor visitor = new Visitor(unitName, unit, cg);
-		unit.accept(visitor);
+
 	}
-	
 	
 	/**
 	 * This function reads a file into a String.
@@ -101,8 +100,7 @@ public class Parser {
 		String repoName = Resources.repository.substring(Resources.repository.lastIndexOf("/")+1);
 		
 		// Get starting point of unit name
-		int start = file.indexOf(Resources.repository)
-				+ Resources.repository.length() - repoName.length();
+		int start = file.indexOf(Resources.repository) + Resources.repository.length() - repoName.length();
 		
 		// Get the unit name
 		String unitName = file.substring(start);

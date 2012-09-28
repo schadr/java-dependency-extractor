@@ -1,7 +1,10 @@
 package as.jcge.scm.git;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,14 +13,24 @@ import as.jcge.models.Owner;
 import as.jcge.util.ProcessSpawner;
 
 public class GitController {
-	private ProcessSpawner spawner;
+	public final static String ADD = "A";
+	public final static String DELETE = "D";
+	public final static String MODIFY = "M";
 	
-	public GitController() {
-		spawner = new ProcessSpawner(Resources.repository);
+	private ProcessSpawner fSpawner;
+	private String fRepository;
+	
+	public GitController(String repositoryPath) {
+		fRepository = repositoryPath;
+		fSpawner = new ProcessSpawner(repositoryPath);
+	}
+	
+	public String getRepositoryPath() {
+		return fRepository;
 	}
 	
 	public void reset(String commitID) {
-		spawner.spawnProcess(new String[] {"git", "reset", "--hard", commitID});
+		fSpawner.spawnProcess(new String[] {"git", "reset", "--hard", commitID});
 	}
 	
 	public List<String> getAllCommits() {
@@ -27,7 +40,7 @@ public class GitController {
 	}
 	
 	private void parseLogForCommits(List<String> commits) {
-		String output = spawner.spawnProcess(new String[] {"git", "log", "--reverse", "--no-merges"});
+		String output = fSpawner.spawnProcess(new String[] {"git", "log", "--reverse", "--no-merges"});
 		
 		String[] lines = output.split(System.getProperty("line.separator"));
 		for(int i = 0; i < lines.length; i++) {
@@ -38,27 +51,40 @@ public class GitController {
 		}
 	}
 	
-	public List<String> getAllFiles() {
-		List<String> files = new ArrayList<String>();
-		findAllJavaFiles(files);
-		return files;
-	}
-	
-	private void findAllJavaFiles(List<String> files) {
-		String output = spawner.spawnProcess(new String[] {"find", "."});
+	/**
+	 * computes which files have been added/deleted/modified
+	 * 
+	 * note, the filename are all relative and not absolute
+	 * 
+	 * @param beforeCommitId
+	 * @param afterCommitId
+	 * @return
+	 */
+	public Map<String, List<String>> getAffectedFiles(String beforeCommitId, String afterCommitId) {
+		String output = fSpawner.spawnProcess(new String[] {"git", "diff", "--name-status", beforeCommitId, afterCommitId});
+		
+		HashMap<String, List<String>> affectedFiles = new HashMap<String, List<String>>();
+		affectedFiles.put(ADD, new ArrayList<String>());
+		affectedFiles.put(DELETE, new ArrayList<String>());
+		affectedFiles.put(MODIFY, new ArrayList<String>());
 		
 		String[] lines = output.split(System.getProperty("line.separator"));
-		for(int i = 0; i < lines.length; i++) {
-			if(lines[i].endsWith(".java")) {
-				if(lines[i].startsWith("./"))
-					lines[i] = lines[i].replaceFirst("./", "");
-				files.add(lines[i]);
-			}
+		String type = null;
+		for (String line : lines) {
+			if (line.startsWith(ADD)) type = ADD;
+			if (line.startsWith(DELETE)) type = DELETE;
+			if (line.startsWith(MODIFY)) type = MODIFY;
+
+			String filename = line.replaceFirst(type, "");
+			filename = filename.replaceAll("\\s", "");
+			affectedFiles.get(type).add(fRepository + File.pathSeparator + filename);
 		}
+		
+		return affectedFiles;
 	}
 	
 	public String getCommitDiff(String commit) {
-		return spawner.spawnProcess(new String[] {"git", "diff-tree", "--unified=0", commit});
+		return fSpawner.spawnProcess(new String[] {"git", "diff-tree", "--unified=0", commit});
 	}
 	
 	public String getCommitDiffJavaOnly(String commit, List<String> javaFiles) {
@@ -71,18 +97,18 @@ public class GitController {
 			javaFiles.add(0, "diff-tree");
 			javaFiles.add(0, "git");
 		}
-		return spawner.spawnProcess(javaFiles);
+		return fSpawner.spawnProcess(javaFiles);
 	}
 	
 	public String getAuthorOfCommit(String commit) {
-		return spawner.spawnProcess(new String[] {"git", "show", "-s", "--format=%ce", commit})
+		return fSpawner.spawnProcess(new String[] {"git", "show", "-s", "--format=%ce", commit})
 				.replace("\n", "");
 	}
 	
 	public List<Owner> getOwnersOfFileRange(String file, int start, int end) {
 		List<Owner> owners = new ArrayList<Owner>();
 		
-		String output = spawner.spawnProcess(new String[] {"git", "blame", "-e", "-L"+start+","+end, file});
+		String output = fSpawner.spawnProcess(new String[] {"git", "blame", "-e", "-L"+start+","+end, file});
 		String[] lines = output.split(System.getProperty("line.separator"));
 		
 		for(int i = 0; i < lines.length; i++) {
@@ -115,7 +141,7 @@ public class GitController {
 	 * @return
 	 */
 	public String getHead() {
-		String output = spawner.spawnProcess(new String[] {"git", "rev-parse", "HEAD"});
+		String output = fSpawner.spawnProcess(new String[] {"git", "rev-parse", "HEAD"});
 		String[] lines = output.split(System.getProperty("line.separator"));
 		
 		Pattern pattern = Pattern.compile(Resources.gitHead);

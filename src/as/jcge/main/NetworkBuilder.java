@@ -30,9 +30,9 @@ public class NetworkBuilder {
 	
 	public NetworkBuilder(DatabaseConnector db) {
 		this.db = db;
-		gc = new GitController();
+		gc = new GitController(Resources.repository);
 		udp = new UnifiedDiffParser();
-		cgg = new CallGraphGenerator();
+		cgg = new CallGraphGenerator(gc);
 		cg = new CallGraph();
 		
 		HEAD = gc.getHead();

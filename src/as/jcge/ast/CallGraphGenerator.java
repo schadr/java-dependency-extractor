@@ -6,12 +6,13 @@ import java.io.IOException;
 import as.jcge.main.Resources;
 import as.jcge.models.CallGraph;
 import as.jcge.scm.git.GitController;
+import as.jcge.util.JavaJarLocator;
 
 public class CallGraphGenerator {
-	private GitController gc;
+	private GitController fGc;
 	
-	public CallGraphGenerator() {
-		gc = new GitController();
+	public CallGraphGenerator(GitController gc) {
+		fGc = gc;
 	}
 	
 	/**
@@ -21,7 +22,7 @@ public class CallGraphGenerator {
 	 */
 	public void createCallGraphAtCommit(String commitID, CallGraph cg) {
 		// Set the repo to the commit
-		gc.reset(commitID);
+		fGc.reset(commitID);
 		
 		// Set up the config file
 		JavaJarLocator locator = new JavaJarLocator();
@@ -29,7 +30,7 @@ public class CallGraphGenerator {
 		
 		// Parse each file
 		for(File file: locator.fJavaFiles) {
-			Parser parser = new Parser(locator.fJarFilePaths, locator.fJavaFilePaths);
+			JavaFileParser parser = new JavaFileParser(locator.fJarFilePaths, locator.fJavaFilePaths);
 			parser.parseFile(file.getAbsolutePath(), cg);
 		}
 	}

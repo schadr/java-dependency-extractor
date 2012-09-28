@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import as.jcge.scm.Commit;
+
 public class CallGraph {
 	private Map<String, Method> methods;
 	private Map<Method, List<Method>> invokes;
@@ -19,6 +21,10 @@ public class CallGraph {
 		this.invokes = invokes;
 	}
 	
+	public CallGraph(Commit commit) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void addMethod(Method method) {
 		if(methods.containsKey(method.toString())) {
 			// Update

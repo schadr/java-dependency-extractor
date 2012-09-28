@@ -1,4 +1,4 @@
-package as.jcge.ast;
+package as.jcge.util;
 
 import java.io.File;
 import java.io.FileFilter;
