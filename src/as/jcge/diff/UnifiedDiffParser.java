@@ -5,78 +5,79 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import as.jcge.main.Resources;
 import as.jcge.models.FileChange;
 import as.jcge.models.Range;
 
 
 
-public class UnifiedDiffParser
-{
-	private String unifiedDiff;
+public class UnifiedDiffParser {
+	public static final String DIFF_OLD_FILE = "^---.*";
+	public static final String DIFF_NEW_FILE = "^\\+\\+\\+.*";
+	public static final String DIFF_HUNK_RANGE = "@@.*@@.*";
+	public static final String DIFF_OLD_RANGE = "-[0-9]+,?[0-9]*";
+	public static final String DIFF_NEW_RANGE = "\\+[0-9]+,?[0-9]*";
 	
-	private FileChange currentChangeset;
+	private String fUnifiedDiff;
 	
-	public UnifiedDiffParser() {
-		
-	}
+	private FileChange fCurrentChangeset;
+	
 	
 	public UnifiedDiffParser(String unifiedDiff) {
-		this.unifiedDiff = unifiedDiff;
+		this.fUnifiedDiff = unifiedDiff;
 	}
 	
 	public List<FileChange> parse() {
-		if(unifiedDiff == null)
+		if(fUnifiedDiff == null)
 			return null;
 		return parseUnifiedDiff();
 	}
 	
 	public List<FileChange> parse(String unifiedDiff) {
-		this.unifiedDiff = unifiedDiff;
+		this.fUnifiedDiff = unifiedDiff;
 		return parseUnifiedDiff();
 	}
 	
 	private List<FileChange> parseUnifiedDiff() {
 		List<FileChange> changes = new ArrayList<FileChange>();
-		this.currentChangeset = null;
+		this.fCurrentChangeset = null;
 		
-		String[] lines = unifiedDiff.split(System.getProperty("line.separator"));
+		String[] lines = fUnifiedDiff.split(System.getProperty("line.separator"));
 		for(int i = 0; i < lines.length; i++) {
 			parseDiffLine(lines[i], changes);
 		}
-		if(currentChangeset != null)
-			changes.add(currentChangeset);
+		if(fCurrentChangeset != null)
+			changes.add(fCurrentChangeset);
 		
 		return changes;
 	}
 	
 	private void parseDiffLine(String line, List<FileChange> changes) {
-		if(line.matches(Resources.diffOldFile)) {
-			if(currentChangeset != null)
-				changes.add(currentChangeset);
+		if(line.matches(DIFF_OLD_FILE)) {
+			if(fCurrentChangeset != null)
+				changes.add(fCurrentChangeset);
 			
-			currentChangeset = new FileChange();
+			fCurrentChangeset = new FileChange();
 			String oldFile = parseDiffOldFile(line);
 			
 			if(oldFile.startsWith("a/"))
 				oldFile = oldFile.replaceFirst("a/", "");
 			
-			currentChangeset.setOldFile(oldFile);
+			fCurrentChangeset.setOldFile(oldFile);
 		}
-		else if(line.matches(Resources.diffNewFile)) {
-			if(currentChangeset == null)
-				currentChangeset = new FileChange();
+		else if(line.matches(DIFF_NEW_FILE)) {
+			if(fCurrentChangeset == null)
+				fCurrentChangeset = new FileChange();
 			
 			String newFile = parseDiffNewFile(line);
 			if(newFile.startsWith("b/"))
 				newFile = newFile.replaceFirst("b/", "");
 			
-			currentChangeset.setNewFile(newFile);
+			fCurrentChangeset.setNewFile(newFile);
 		}
-		else if(line.matches(Resources.diffHunkRange)) {
+		else if(line.matches(DIFF_HUNK_RANGE)) {
 			Range range = parseDiffHunkRange(line);
 			if(range != null)
-				currentChangeset.addRange(range);
+				fCurrentChangeset.addRange(range);
 		}
 	}
 	
@@ -97,7 +98,7 @@ public class UnifiedDiffParser
 	private Range parseDiffHunkRange(String line) {
 		Range range = new Range();
 		
-		Pattern pattern = Pattern.compile(Resources.diffNewRange);
+		Pattern pattern = Pattern.compile(DIFF_NEW_RANGE);
 		Matcher matcher = pattern.matcher(line);
 		
 		if(matcher.find()) {

@@ -11,7 +11,6 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
-import as.jcge.main.Resources;
 import as.jcge.models.CallGraph;
 import as.jcge.models.Method;
 
@@ -106,10 +105,7 @@ public class Visitor extends ASTVisitor {
 			method.setName(methodBinding.getName());
 			if(node != null) {
 				// Handle working directory
-				if(file.startsWith(Resources.repositoryName+"/"))
-					method.setFile(file.replaceFirst(Resources.repositoryName+"/", ""));
-				else
-					method.setFile(file);
+				method.setFile(file);
 				method.setStart(cu.getLineNumber(node.getStartPosition()));
 				method.setEnd(cu.getLineNumber(node.getStartPosition() + node.getLength()));
 			}

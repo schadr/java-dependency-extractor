@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import as.jcge.main.Resources;
 import as.jcge.models.Owner;
 import as.jcge.util.ProcessSpawner;
 
@@ -16,6 +15,10 @@ public class GitController {
 	public final static String ADD = "A";
 	public final static String DELETE = "D";
 	public final static String MODIFY = "M";
+	
+	private static final String GIT_LOG_COMMIT = "commit [a-z0-9]+";
+	private static final String GIT_HEAD = "[a-z0-9]+";
+	private static final String GIT_BLAME = "\\<(.+?)\\>";
 	
 	private ProcessSpawner fSpawner;
 	private String fRepository;
@@ -44,7 +47,7 @@ public class GitController {
 		
 		String[] lines = output.split(System.getProperty("line.separator"));
 		for(int i = 0; i < lines.length; i++) {
-			if(lines[i].matches(Resources.gitLogCommit)) {
+			if(lines[i].matches(GIT_LOG_COMMIT)) {
 				String[] split = lines[i].split(" ");
 				commits.add(split[1]);
 			}
@@ -111,8 +114,8 @@ public class GitController {
 		String output = fSpawner.spawnProcess(new String[] {"git", "blame", "-e", "-L"+start+","+end, file});
 		String[] lines = output.split(System.getProperty("line.separator"));
 		
+		Pattern pattern = Pattern.compile(GIT_BLAME);
 		for(int i = 0; i < lines.length; i++) {
-			Pattern pattern = Pattern.compile(Resources.gitBlame);
 			Matcher matcher = pattern.matcher(lines[i]);
 
 			if(matcher.find()) {
@@ -144,7 +147,7 @@ public class GitController {
 		String output = fSpawner.spawnProcess(new String[] {"git", "rev-parse", "HEAD"});
 		String[] lines = output.split(System.getProperty("line.separator"));
 		
-		Pattern pattern = Pattern.compile(Resources.gitHead);
+		Pattern pattern = Pattern.compile(GIT_HEAD);
 		Matcher matcher = pattern.matcher(lines[0]);
 		
 		if(matcher.find()) {

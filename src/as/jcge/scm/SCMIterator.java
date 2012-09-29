@@ -52,8 +52,8 @@ public class SCMIterator {
 		CallGraph cg = new CallGraph(new Commit(commitID, fGit.getAuthorOfCommit(commitID)));
 		
 		// parse new/modified files
+		JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath, fGit.getRepositoryPath());
 		for(File file: fProject.unParsedJavaFiles) {
-			JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath);
 			CompilationUnit unit = parser.parseFile(file.getAbsolutePath(), cg);
 			String fullyQuallifiedFilename = file.getAbsolutePath() + File.separator + file.getName();
 			fProject.cUnits.put(fullyQuallifiedFilename, unit);

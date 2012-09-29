@@ -15,18 +15,19 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import as.jcge.main.Resources;
 import as.jcge.models.CallGraph;
 
 public class JavaFileParser {
 	private Collection<String> fClassPath;
 	private Collection<String> fSourcePath;
 	private List<String> fEncodings;
+	private String fRepositoryPath = null;
 	
-	public JavaFileParser(Collection<String> classPath, Collection<String> sourcePath) {
+	public JavaFileParser(Collection<String> classPath, Collection<String> sourcePath, String repositoryPath) {
 		fClassPath = classPath;
 		fSourcePath = sourcePath;
 		fEncodings = new ArrayList<String>();
+		fRepositoryPath = repositoryPath;
 	}
 	
 	/**
@@ -63,10 +64,7 @@ public class JavaFileParser {
 		// Parse
 		CompilationUnit unit = (CompilationUnit) parser.createAST(null);
 
-		return unit;
-		
-		// Visit the syntax tree
-
+		return unit;	
 	}
 	
 	/**
@@ -97,10 +95,10 @@ public class JavaFileParser {
 	 */
 	private String generateUnitName(String file) {
 		// Get repository name
-		String repoName = Resources.repository.substring(Resources.repository.lastIndexOf("/")+1);
+		String repoName = fRepositoryPath.substring(fRepositoryPath.lastIndexOf("/")+1);
 		
 		// Get starting point of unit name
-		int start = file.indexOf(Resources.repository) + Resources.repository.length() - repoName.length();
+		int start = file.indexOf(fRepositoryPath) + fRepositoryPath.length() - repoName.length();
 		
 		// Get the unit name
 		String unitName = file.substring(start);
