@@ -136,4 +136,9 @@ public class Method
 				"(" + parameters.toString() + ")";
 		return val;
 	}
+
+	public boolean wasModified() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

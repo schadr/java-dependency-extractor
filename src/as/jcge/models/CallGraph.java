@@ -93,6 +93,11 @@ public class CallGraph {
 	public void setInvokes(Map<Method, List<Method>> invokes) {
 		this.invokes = invokes;
 	}
+
+	public List<Method> getCalledMethods() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

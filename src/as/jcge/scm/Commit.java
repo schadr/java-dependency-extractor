@@ -5,6 +5,7 @@ public class Commit {
 
 	public String author;
 	public String commitID;
+	public String time;
 
 	public Commit(String commitID, String authorOfCommit) {
 		this.commitID = commitID;
