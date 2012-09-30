@@ -94,9 +94,8 @@ public class CallGraph {
 		this.invokes = invokes;
 	}
 
-	public List<Method> getCalledMethods() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Method> getCalledMethods(Method method) {
+		return invokes.get(method);
 	}
 	
 	

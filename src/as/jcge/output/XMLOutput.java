@@ -34,7 +34,7 @@ public class XMLOutput {
 		
 		Collection<Method> methods = cg.getMethods().values();
 		for (Method m : methods) {
-			List<Method> callers = cg.getCalledMethods();
+			List<Method> callers = cg.getCalledMethods(m);
 			commitElement.appendChild( createMethodNode(m, callers, doc));
 		}
 		
