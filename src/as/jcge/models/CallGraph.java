@@ -1,14 +1,15 @@
 package as.jcge.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import as.jcge.scm.Commit;
 
 public class CallGraph {
-	private Map<String, Method> methods;
-	private Map<Method, List<Method>> invokes;
+	private Map<String, Method> methods = new HashMap<String, Method>();
+	private Map<Method, List<Method>> invokes = new HashMap<Method, List<Method>>();
 	private Commit fCommit;
 	
 	public CallGraph(Commit commit) {
