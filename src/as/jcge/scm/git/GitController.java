@@ -17,7 +17,6 @@ public class GitController {
 	public final static String DELETE = "D";
 	public final static String MODIFY = "M";
 	
-	private static final String GIT_LOG_COMMIT = "commit [a-z0-9]+";
 	private static final String GIT_HEAD = "[a-z0-9]+";
 	private static final String GIT_BLAME = "\\<(.+?)\\>";
 	
@@ -49,15 +48,13 @@ public class GitController {
 	 */
 	public List<String> getAllCommits() {
 		List<String> commits = new ArrayList<String>();
-		String output = fSpawner.spawnProcess(new String[] {"git", "log", "--reverse", "--no-merges"});
+		String output = fSpawner.spawnProcess(new String[] {"git", "rev-list", "--all", "--no-merges", "--pretty=oneline", "--reverse"});
 		
 		String[] lines = output.split(System.getProperty("line.separator"));
-		for(int i = 0; i < lines.length; i++) {
-			if(lines[i].matches(GIT_LOG_COMMIT)) {
-				String[] split = lines[i].split(" ");
-				commits.add(split[1]);
-			}
+		for (String line : lines) {
+			commits.add(line.split(" ")[0]);
 		}
+		
 		return commits;
 	}
 	
