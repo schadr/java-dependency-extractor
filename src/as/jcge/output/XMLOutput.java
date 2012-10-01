@@ -31,6 +31,7 @@ public class XMLOutput {
 		commitElement.setAttribute("commit_id", cg.getCommit().commitID);
 		commitElement.setAttribute("author", cg.getCommit().author);
 		commitElement.setAttribute("time", cg.getCommit().time.toString());
+		doc.appendChild(commitElement);
 		
 		Collection<Method> methods = cg.getMethods().values();
 		for (Method m : methods) {
