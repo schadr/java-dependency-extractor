@@ -1,4 +1,4 @@
-package as.jcge.diff;
+package as.jcge.scm.git;
 
 import java.util.ArrayList;
 import java.util.List;

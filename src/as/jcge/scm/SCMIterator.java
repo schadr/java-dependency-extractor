@@ -11,12 +11,12 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import as.jcge.ast.JavaFileParser;
 import as.jcge.ast.Visitor;
-import as.jcge.diff.UnifiedDiffParser;
 import as.jcge.models.CallGraph;
 import as.jcge.models.FileChange;
 import as.jcge.models.JProject;
 import as.jcge.models.Range;
 import as.jcge.scm.git.GitController;
+import as.jcge.scm.git.UnifiedDiffParser;
 import as.jcge.util.JavaJarLocator;
 
 public class SCMIterator {
