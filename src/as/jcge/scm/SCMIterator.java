@@ -21,7 +21,6 @@ import as.jcge.util.JavaJarLocator;
 
 public class SCMIterator {
 	private GitController fGit = null;
-	private boolean fInitilized = false;
 	private int fCurrentCommit = -1;
 	private List<String> fCommits = null;
 	
@@ -29,13 +28,10 @@ public class SCMIterator {
 	
 	public SCMIterator(GitController gitController) {
 		fGit = gitController;
+		fCommits = fGit.getAllCommits();
 	}
 
 	public boolean hasNext() {
-		if (!fInitilized) {
-			fCommits = fGit.getAllCommits();
-			fInitilized = true;
-		}
 		return fCommits.size()-1 > fCurrentCommit ;
 	}
 
@@ -61,7 +57,7 @@ public class SCMIterator {
 	}
 
 	private CallGraph createCallGraph(String commitID) {
-		CallGraph cg = new CallGraph(new Commit(commitID, fGit.getAuthorOfCommit(commitID)));
+		CallGraph cg = new CallGraph(fGit.getCommitInfo(commitID));
 		
 		// parse new/modified files
 		JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath, fGit.getRepositoryPath());
@@ -94,11 +90,13 @@ public class SCMIterator {
 	private JProject initJavaProject() {
 		JProject project = new JProject();
 		
+		String[] foldersToIgnrore = {".git"};
+		
 		JavaJarLocator locator = new JavaJarLocator();
-		locator.locate(new File(fGit.getRepositoryPath()));
-		project.classPath = locator.fJarFilePaths;
-		project.sourcePath = locator.fJavaFilePaths;
-		project.unParsedJavaFiles = locator.fJavaFiles;
+		locator.locate(new File(fGit.getRepositoryPath()), foldersToIgnrore);
+		project.classPath = locator.jarFilePaths;
+		project.sourcePath = locator.javaFilePaths;
+		project.unParsedJavaFiles = locator.javaFiles;
 		project.cUnits = new HashMap<String,CompilationUnit>();
 		
 		return project;

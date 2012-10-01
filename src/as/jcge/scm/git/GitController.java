@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import as.jcge.models.Owner;
+import as.jcge.scm.Commit;
 import as.jcge.util.ProcessSpawner;
 
 public class GitController {
@@ -32,17 +33,22 @@ public class GitController {
 		return fRepository;
 	}
 	
+	/**
+	 * resets the repository to a specific commit
+	 * 
+	 * @param commitID the commitID the repository is supposed to be set to
+	 */
 	public void reset(String commitID) {
 		fSpawner.spawnProcess(new String[] {"git", "reset", "--hard", commitID});
 	}
 	
+	/**
+	 * gets a list of all commits in the repository
+	 * 
+	 * @return list of commitids
+	 */
 	public List<String> getAllCommits() {
 		List<String> commits = new ArrayList<String>();
-		parseLogForCommits(commits);
-		return commits;
-	}
-	
-	private void parseLogForCommits(List<String> commits) {
 		String output = fSpawner.spawnProcess(new String[] {"git", "log", "--reverse", "--no-merges"});
 		
 		String[] lines = output.split(System.getProperty("line.separator"));
@@ -52,6 +58,7 @@ public class GitController {
 				commits.add(split[1]);
 			}
 		}
+		return commits;
 	}
 	
 	/**
@@ -86,16 +93,29 @@ public class GitController {
 		return affectedFiles;
 	}
 	
-	public String getCommitDiff(String commit) {
-		return fSpawner.spawnProcess(new String[] {"git", "diff-tree", "--unified=0", commit});
+	/**
+	 * TODO should be returning a list of fileChanges
+	 * 
+	 * @param commitID
+	 * @return String containing the command line diff output
+	 */
+	public String getCommitDiff(String commitID) {
+		return fSpawner.spawnProcess(new String[] {"git", "diff-tree", "--unified=0", commitID});
 	}
 	
-	public String getCommitDiffJavaOnly(String commit, List<String> javaFiles) {
+	/**
+	 * TODO should be returning a list of fileChanges
+	 * 
+	 * @param commitID
+	 * @param javaFiles files that should be diffed
+	 * @return one string blobb containing all the diff information
+	 */
+	public String getCommitDiffJavaOnly(String commitID, List<String> javaFiles) {
 		if(javaFiles.isEmpty())
-			return getCommitDiff(commit);
+			return getCommitDiff(commitID);
 		else {
 			javaFiles.add(0, "--");
-			javaFiles.add(0, commit);
+			javaFiles.add(0, commitID);
 			javaFiles.add(0, "--unified=0");
 			javaFiles.add(0, "diff-tree");
 			javaFiles.add(0, "git");
@@ -103,15 +123,37 @@ public class GitController {
 		return fSpawner.spawnProcess(javaFiles);
 	}
 	
-	public String getAuthorOfCommit(String commit) {
-		return fSpawner.spawnProcess(new String[] {"git", "show", "-s", "--format=%ce", commit})
-				.replace("\n", "");
+	/**
+	 * returns the author of the commit
+	 * 
+	 * @param commitID
+	 * @return auther string
+	 */
+	public String getAuthorOfCommit(String commitID) {
+		return fSpawner.spawnProcess(new String[] {"git", "show", "-s", "--format=%ce", commitID}).replace("\n", "");
 	}
 	
-	public List<Owner> getOwnersOfFileRange(String file, int start, int end) {
+	/**
+	 * returns the date of the commit
+	 * @param commitID
+	 * @return date in string form
+	 */
+	public String getDateOfCommit(String commitID) {
+		return fSpawner.spawnProcess(new String[] {"git", "show", "-s", "--format=%cd", commitID}).replace("\n", "");
+	}
+	
+	/**
+	 * returns the authors that last edited the file in the given line range
+	 * 
+	 * @param file
+	 * @param startLine
+	 * @param endLine
+	 * @return
+	 */
+	public List<Owner> getOwnersOfFileRange(String file, int startLine, int endLine) {
 		List<Owner> owners = new ArrayList<Owner>();
 		
-		String output = fSpawner.spawnProcess(new String[] {"git", "blame", "-e", "-L"+start+","+end, file});
+		String output = fSpawner.spawnProcess(new String[] {"git", "blame", "-e", "-L"+startLine+","+endLine, file});
 		String[] lines = output.split(System.getProperty("line.separator"));
 		
 		Pattern pattern = Pattern.compile(GIT_BLAME);
@@ -121,7 +163,7 @@ public class GitController {
 			if(matcher.find()) {
 				Owner owner = new Owner();
 				owner.setEmail(matcher.group(1));
-				owner.setOwnership((float)1/(end-start+1));
+				owner.setOwnership((float)1/(endLine-startLine+1));
 				updateOwnersList(owners, owner);
 			}
 		}
@@ -155,5 +197,21 @@ public class GitController {
 		}
 		
 		return null;
+	}
+
+	/**
+	 * return a commit information object
+	 * 
+	 * @param commitID
+	 * @return
+	 */
+	public Commit getCommitInfo(String commitID) {
+		Commit c = new Commit();
+		
+		c.author = getAuthorOfCommit(commitID);
+		c.commitID = commitID;
+		c.time = getDateOfCommit(commitID);
+		
+		return c;
 	}
 }
