@@ -47,6 +47,14 @@ public class CallGraph {
 		}
 	}
 	
+	public void setMethodsAsChanged(String file, int startLine, int endLine) {
+		List<Method> affectedMethods = getChangedMethods(file, startLine, endLine);
+		
+		for (Method m : affectedMethods) {
+			m.setWasChanged(true);
+		}
+	}
+	
 	public List<Method> getChangedMethods(String file, int start, int end) {
 		List<Method> changedMethods = new ArrayList<Method>();
 		

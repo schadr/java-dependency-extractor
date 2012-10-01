@@ -11,8 +11,11 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import as.jcge.ast.JavaFileParser;
 import as.jcge.ast.Visitor;
+import as.jcge.diff.UnifiedDiffParser;
 import as.jcge.models.CallGraph;
+import as.jcge.models.FileChange;
 import as.jcge.models.JProject;
+import as.jcge.models.Range;
 import as.jcge.scm.git.GitController;
 import as.jcge.util.JavaJarLocator;
 
@@ -46,9 +49,18 @@ public class SCMIterator {
 		if (fCurrentCommit == 0) {
 			fProject = initJavaProject();
 		} else {
-			updateJavaProject(fProject, fCommits.get(fCurrentCommit-1), commitID);
+			Map<String, List<String>> affectedFiles = fGit.getAffectedFiles(fCommits.get(fCurrentCommit-1), commitID);
+			updateJavaProject(fProject, affectedFiles);
 		}
 	
+		CallGraph cg = createCallGraph(commitID);
+		
+		markChangedMethods(commitID, cg);
+		
+		return cg;
+	}
+
+	private CallGraph createCallGraph(String commitID) {
 		CallGraph cg = new CallGraph(new Commit(commitID, fGit.getAuthorOfCommit(commitID)));
 		
 		// parse new/modified files
@@ -65,8 +77,18 @@ public class SCMIterator {
 			Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg);
 			unit.accept(visitor);
 		}
-		
 		return cg;
+	}
+
+	private void markChangedMethods(String commitID, CallGraph cg) {
+		UnifiedDiffParser diffParser = new UnifiedDiffParser( fGit.getCommitDiff(commitID)); 
+		List<FileChange> changes = diffParser.parse();
+		for (FileChange change : changes) {
+			String filename = change.getNewFile();
+			for (Range changeRange : change.getRanges()) {
+				cg.setMethodsAsChanged(filename, changeRange.getStart(), changeRange.getEnd());
+			}
+		}
 	}
 
 	private JProject initJavaProject() {
@@ -82,8 +104,7 @@ public class SCMIterator {
 		return project;
 	}
 
-	private void updateJavaProject(JProject project, String beforeCommitID, String afterCommitID) {
-		Map<String, List<String>> affectedFiles = fGit.getAffectedFiles(beforeCommitID, afterCommitID);
+	private void updateJavaProject(JProject project, Map<String, List<String>> affectedFiles) {
 		project.unParsedJavaFiles.clear();
 		
 		for (String fullyQualifiedFileName : affectedFiles.get(GitController.ADD)) {

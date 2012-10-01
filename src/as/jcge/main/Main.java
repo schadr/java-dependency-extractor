@@ -18,9 +18,11 @@ public class Main {
 		GitController gc = new GitController(optArgs.get(ArgumentParser.OPT_REPOSITORY_LOCATION));
 		SCMIterator iter = new SCMIterator(gc);
 		XMLOutput outputter = new XMLOutput();
+		
+		OutputStreamWriter stdout = new OutputStreamWriter(System.out);
 		while (iter.hasNext()) {
 			CallGraph cg = iter.next();
-			outputter.output(cg,new OutputStreamWriter(System.out));
+			outputter.output(cg, stdout);
 		}
 	}
 }
