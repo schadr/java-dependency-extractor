@@ -1,5 +1,6 @@
 package as.jcge.output;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -20,6 +22,15 @@ import as.jcge.models.CallGraph;
 import as.jcge.models.Method;
 
 public class XMLOutput {
+	
+	public void startOutput(Writer out, String projectName) throws IOException {
+		out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+		out.write("<project name=\""+projectName+"\">");
+	}
+	
+	public void stopOutput(Writer out) throws IOException {
+		out.write("</project>");
+	}
 	
 	public void output(CallGraph cg, Writer out) throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -41,6 +52,7 @@ public class XMLOutput {
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(out);
 		transformer.transform(source, result);

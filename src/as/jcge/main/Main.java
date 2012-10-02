@@ -1,5 +1,7 @@
 package as.jcge.main;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 
@@ -13,13 +15,14 @@ import as.jcge.scm.git.GitController;
 
 
 public class Main {
-	public static void main(String[] args) throws ParserConfigurationException, TransformerException {
+	public static void main(String[] args) throws ParserConfigurationException, TransformerException, IOException {
 		Map<String,String> optArgs = ArgumentParser.parseArguments(args);
 		GitController gc = new GitController(optArgs.get(ArgumentParser.OPT_REPOSITORY_LOCATION));
 		SCMIterator iter = new SCMIterator(gc);
 		XMLOutput outputter = new XMLOutput();
 		
 		OutputStreamWriter stdout = new OutputStreamWriter(System.out);
+		outputter.startOutput(stdout, gc.getRepositoryPath().split(File.separator)[gc.getRepositoryPath().split(File.separator).length-2]);
 		while (iter.hasNext()) {
 			try {
 				CallGraph cg = iter.next();
@@ -28,5 +31,6 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+		outputter.stopOutput(stdout);
 	}
 }
