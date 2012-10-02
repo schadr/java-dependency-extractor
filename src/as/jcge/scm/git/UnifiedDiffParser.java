@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 import as.jcge.models.FileChange;
 import as.jcge.models.Range;
 
-
-
 public class UnifiedDiffParser {
 	public static final String DIFF_OLD_FILE = "^---.*";
 	public static final String DIFF_NEW_FILE = "^\\+\\+\\+.*";
@@ -17,31 +15,17 @@ public class UnifiedDiffParser {
 	public static final String DIFF_OLD_RANGE = "-[0-9]+,?[0-9]*";
 	public static final String DIFF_NEW_RANGE = "\\+[0-9]+,?[0-9]*";
 	
-	private String fUnifiedDiff;
-	
 	private FileChange fCurrentChangeset;
 	
-	
-	public UnifiedDiffParser(String unifiedDiff) {
-		this.fUnifiedDiff = unifiedDiff;
-	}
-	
-	public List<FileChange> parse() {
-		if(fUnifiedDiff == null)
-			return null;
-		return parseUnifiedDiff();
-	}
-	
 	public List<FileChange> parse(String unifiedDiff) {
-		this.fUnifiedDiff = unifiedDiff;
-		return parseUnifiedDiff();
+		return parseUnifiedDiff(unifiedDiff);
 	}
 	
-	private List<FileChange> parseUnifiedDiff() {
+	private List<FileChange> parseUnifiedDiff(String unifiedDiff) {
 		List<FileChange> changes = new ArrayList<FileChange>();
 		this.fCurrentChangeset = null;
 		
-		String[] lines = fUnifiedDiff.split(System.getProperty("line.separator"));
+		String[] lines = unifiedDiff.split(System.getProperty("line.separator"));
 		for(int i = 0; i < lines.length; i++) {
 			parseDiffLine(lines[i], changes);
 		}

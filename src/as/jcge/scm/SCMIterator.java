@@ -61,7 +61,7 @@ public class SCMIterator {
 		JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath.getPaths(), fGit.getRepositoryPath());
 		for(File file: fProject.unParsedJavaFiles) {
 			CompilationUnit unit = parser.parseFile(file.getAbsolutePath(), cg);
-			String fullyQuallifiedFilename = file.getAbsolutePath() + File.separator + file.getName();
+			String fullyQuallifiedFilename = file.getAbsolutePath();
 			fProject.cUnits.put(fullyQuallifiedFilename, unit);
 		}
 
@@ -71,16 +71,19 @@ public class SCMIterator {
 			Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg);
 			unit.accept(visitor);
 		}
+		
 		return cg;
 	}
 
 	private void markChangedMethods(String commitID, CallGraph cg) {
-		UnifiedDiffParser diffParser = new UnifiedDiffParser( fGit.getCommitDiff(commitID)); 
-		List<FileChange> changes = diffParser.parse();
+		UnifiedDiffParser diffParser = new UnifiedDiffParser(); 
+		List<FileChange> changes = diffParser.parse(fGit.getCommitDiff(commitID));
 		for (FileChange change : changes) {
 			String filename = change.getNewFile();
-			for (Range changeRange : change.getRanges()) {
-				cg.setMethodsAsChanged(filename, changeRange.getStart(), changeRange.getEnd());
+			if (filename != null && filename.endsWith("java")) {
+				for (Range changeRange : change.getRanges()) {
+					cg.setMethodsAsChanged(fGit.getRepositoryPath() + filename, changeRange.getStart(), changeRange.getEnd());
+				}
 			}
 		}
 	}

@@ -19,7 +19,6 @@ public class Method
 	}
 
 	public Method(String file, String pkg, String clazz, String name, List<String> parameters, int start, int end, boolean wasEdited) {
-		super();
 		this.file = file;
 		this.pkg = pkg;
 		this.clazz = clazz;

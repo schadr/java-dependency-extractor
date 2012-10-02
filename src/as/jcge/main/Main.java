@@ -27,6 +27,7 @@ public class Main {
 			try {
 				CallGraph cg = iter.next();
 				outputter.output(cg, stdout);
+				stdout.write("\n");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
