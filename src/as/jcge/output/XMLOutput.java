@@ -88,7 +88,6 @@ public class XMLOutput {
 		int parameterPosition = 1;
 		for (String parameter : m.getParameters()) {
 			Element parameterNode = doc.createElement("parameter");
-			parameterNode.setAttribute("name", parameter);
 			parameterNode.setAttribute("type", parameter);
 			parameterNode.setAttribute("position", String.valueOf(parameterPosition));
 			parametersNode.appendChild(parameterNode);
