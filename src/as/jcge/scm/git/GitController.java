@@ -1,6 +1,5 @@
 package as.jcge.scm.git;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +83,7 @@ public class GitController {
 
 			String filename = line.replaceFirst(type, "");
 			filename = filename.replaceAll("\\s", "");
-			affectedFiles.get(type).add(fRepository + File.pathSeparator + filename);
+			affectedFiles.get(type).add(fRepository + filename);
 		}
 		
 		return affectedFiles;

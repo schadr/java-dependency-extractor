@@ -35,8 +35,8 @@ public class XMLOutput {
 		
 		Collection<Method> methods = cg.getMethods().values();
 		for (Method m : methods) {
-			List<Method> callers = cg.getCalledMethods(m);
-			commitElement.appendChild( createMethodNode(m, callers, doc));
+			List<Method> callees = cg.getCalledMethods(m);
+			commitElement.appendChild( createMethodNode(m, callees, doc));
 		}
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -52,7 +52,8 @@ public class XMLOutput {
 		methodNode.setAttribute("was_changed", String.valueOf(m.wasModified()));
 		
 		methodNode.appendChild(createParametersNode(m, doc));
-		methodNode.appendChild(createCalleesNode(callees, doc));
+		if (callees != null && callees.size() > 0)
+			methodNode.appendChild(createCalleesNode(callees, doc));
 		
 		return methodNode;
 	}

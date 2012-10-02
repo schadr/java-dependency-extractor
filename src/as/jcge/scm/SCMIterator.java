@@ -1,8 +1,6 @@
 package as.jcge.scm;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +46,7 @@ public class SCMIterator {
 			Map<String, List<String>> affectedFiles = fGit.getAffectedFiles(fCommits.get(fCurrentCommit-1), commitID);
 			updateJavaProject(fProject, affectedFiles);
 		}
-	
+
 		CallGraph cg = createCallGraph(commitID);
 		
 		markChangedMethods(commitID, cg);
@@ -60,7 +58,7 @@ public class SCMIterator {
 		CallGraph cg = new CallGraph(fGit.getCommitInfo(commitID));
 		
 		// parse new/modified files
-		JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath, fGit.getRepositoryPath());
+		JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath.getPaths(), fGit.getRepositoryPath());
 		for(File file: fProject.unParsedJavaFiles) {
 			CompilationUnit unit = parser.parseFile(file.getAbsolutePath(), cg);
 			String fullyQuallifiedFilename = file.getAbsolutePath() + File.separator + file.getName();
@@ -94,9 +92,9 @@ public class SCMIterator {
 		
 		JavaJarLocator locator = new JavaJarLocator();
 		locator.locate(new File(fGit.getRepositoryPath()), foldersToIgnrore);
-		project.classPath = locator.jarFilePaths;
-		project.sourcePath = locator.javaFilePaths;
-		project.unParsedJavaFiles = locator.javaFiles;
+		project.classPath = locator.getJarFiles();
+		project.sourcePath = locator.getJavaFilePaths();
+		project.unParsedJavaFiles = locator.getJavaFiles();
 		project.cUnits = new HashMap<String,CompilationUnit>();
 		
 		return project;
@@ -108,8 +106,8 @@ public class SCMIterator {
 		for (String fullyQualifiedFileName : affectedFiles.get(GitController.ADD)) {
 			if (fullyQualifiedFileName.toLowerCase().endsWith("java")) {
 				project.unParsedJavaFiles.add(new File(fullyQualifiedFileName));
-				project.sourcePath.addAll(getSubPaths(fullyQualifiedFileName,fGit.getRepositoryPath()));
-			} else {
+				project.sourcePath.addFile(fullyQualifiedFileName, fGit.getRepositoryPath());
+			} else if (fullyQualifiedFileName.toLowerCase().endsWith("jar")) {
 				File jar = new File(fullyQualifiedFileName);
 				project.classPath.add(jar.getAbsolutePath());
 			}
@@ -124,22 +122,11 @@ public class SCMIterator {
 		
 		for (String fullyQualifiedFileName : affectedFiles.get(GitController.DELETE)) {
 			project.cUnits.remove(fullyQualifiedFileName);
+			if (fullyQualifiedFileName.toLowerCase().endsWith("java")) {
+				project.sourcePath.removeFile(fullyQualifiedFileName, fGit.getRepositoryPath());
+			}
 		}
-	}
 
-	private Collection<String> getSubPaths(String fullyQualifiedFileName, String repositoryPath) {
-		File f = new File(fullyQualifiedFileName);
-		String path = f.getAbsolutePath();
-		path = path.replace(repositoryPath, "");
-		
-		ArrayList<String> subpaths = new ArrayList<String>();
-		
-		int ci = path.indexOf(File.pathSeparator);
-		while (ci != -1) {
-			subpaths.add(repositoryPath + File.separator + path.substring(0,ci));
-			ci = path.indexOf(File.pathSeparator, ci);
-		}
-		
-		return subpaths;
+		project.classPath.removeAll(affectedFiles.get(GitController.DELETE));
 	}
 }

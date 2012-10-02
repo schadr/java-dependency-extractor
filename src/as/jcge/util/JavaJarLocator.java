@@ -11,9 +11,9 @@ import java.util.Set;
 public class JavaJarLocator {
 	
 	public List<File> javaFiles = new ArrayList<File>();
-	public List<File> jarFiles = new ArrayList<File>();
-	public Set<String> javaFilePaths = new HashSet<String>();
-	public Set<String> jarFilePaths = new HashSet<String>();
+	public Set<String> jarFiles = new HashSet<String>();
+	public PathManager javaFilePaths = new PathManager();
+	//public Set<String> jarFilePaths = new HashSet<String>();
   
 	public void locate(File rootFolder) {
 		traverse(rootFolder, new JavaDirectoryFilter(), rootFolder);
@@ -23,22 +23,23 @@ public class JavaJarLocator {
 		traverse(rootFolder, new JavaDirectoryFilter(ignoreFolderNames), rootFolder);
 	}
 	
-	private void traverse(File path, FileFilter javaDirectoryFileFilter, File rootPath) {
+	private int traverse(File path, FileFilter javaDirectoryFileFilter, File rootPath) {
 		File allFilesAndDirectories[] = path.listFiles(javaDirectoryFileFilter);
 		
 		for (File entry : allFilesAndDirectories) {
-			javaFilePaths.add(entry.getAbsolutePath());
 			if (entry.isDirectory()) {
+				javaFilePaths.add(entry.getAbsolutePath(), rootPath.getAbsolutePath().toString());
 				traverse(entry, javaDirectoryFileFilter, rootPath);
 			} else {
 				if (entry.getName().toLowerCase().endsWith(".java")) {
 					javaFiles.add(entry);
 				} else {
-					jarFiles.add(entry);
-					jarFilePaths.add(entry.getAbsolutePath());
+					jarFiles.add(entry.getAbsolutePath());
+					//jarFilePaths.add(entry.getAbsolutePath());
 				}
 			}
 		}
+		return 0;
 	}
 			
 	private static class JavaDirectoryFilter implements FileFilter {
@@ -71,5 +72,17 @@ public class JavaJarLocator {
 			}
 			return false;
 		}
+	}
+
+	public Set<String> getJarFiles() {
+		return jarFiles;
+	}
+
+	public PathManager getJavaFilePaths() {
+		return javaFilePaths;
+	}
+
+	public List<File> getJavaFiles() {
+		return javaFiles;
 	}
 }

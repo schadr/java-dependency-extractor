@@ -20,13 +20,14 @@ import as.jcge.models.CallGraph;
 public class JavaFileParser {
 	private Collection<String> fClassPath;
 	private Collection<String> fSourcePath;
-	private List<String> fEncodings;
+	private List<String> fEncodings = null;
 	private String fRepositoryPath = null;
 	
 	public JavaFileParser(Collection<String> classPath, Collection<String> sourcePath, String repositoryPath) {
 		fClassPath = classPath;
 		fSourcePath = sourcePath;
 		fEncodings = new ArrayList<String>();
+		for (int i = 0; i < sourcePath.size(); ++i) fEncodings.add("UTF-8");
 		fRepositoryPath = repositoryPath;
 	}
 	

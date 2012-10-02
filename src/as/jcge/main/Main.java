@@ -21,8 +21,12 @@ public class Main {
 		
 		OutputStreamWriter stdout = new OutputStreamWriter(System.out);
 		while (iter.hasNext()) {
-			CallGraph cg = iter.next();
-			outputter.output(cg, stdout);
+			try {
+				CallGraph cg = iter.next();
+				outputter.output(cg, stdout);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package as.jcge.main;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +59,7 @@ public class ArgumentParser {
 			}
 			if (!okArg) {
 				if (i == args.length - 1) {
+					if (!args[i].endsWith("/")) args[i] = args[i] + File.separator;
 					optArgs.put(OPT_REPOSITORY_LOCATION, args[i]);
 				} else {
 					System.out.println("Argument " + arg + " not recognized\n");
