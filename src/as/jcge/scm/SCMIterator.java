@@ -37,6 +37,8 @@ public class SCMIterator {
 		fCurrentCommit++;
 		String commitID = fCommits.get(fCurrentCommit);
 		
+		System.err.println(commitID);
+		
 		// checkout next revision
 		fGit.reset(commitID);
 		

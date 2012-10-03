@@ -70,9 +70,13 @@ public class GitController {
 		String output = fSpawner.spawnProcess(new String[] {"git", "diff", "--name-status", beforeCommitId, afterCommitId});
 		
 		HashMap<String, List<String>> affectedFiles = new HashMap<String, List<String>>();
+			
 		affectedFiles.put(ADD, new ArrayList<String>());
 		affectedFiles.put(DELETE, new ArrayList<String>());
 		affectedFiles.put(MODIFY, new ArrayList<String>());
+
+		if (output.length() == 0)
+			return affectedFiles;
 		
 		String[] lines = output.split(System.getProperty("line.separator"));
 		String type = null;
