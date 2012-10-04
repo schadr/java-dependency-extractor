@@ -119,6 +119,22 @@ public class GitController {
 			javaFiles.add(0, "--unified=0");
 			javaFiles.add(0, "diff-tree");
 			javaFiles.add(0, "git");
+			javaFiles.add("|");
+			javaFiles.add("grep");
+			javaFiles.add("'+++|---|@@'");
+		}
+		return fSpawner.spawnProcess(javaFiles);
+	}
+	
+	public String getCommitDiffRangeJavaOnly(String commitID, List<String> javaFiles) {
+		if(javaFiles.isEmpty())
+			return getCommitDiff(commitID);
+		else {
+			javaFiles.add(0, "--");
+			javaFiles.add(0, commitID);
+			javaFiles.add(0, "--unified=0");
+			javaFiles.add(0, "diff-tree");
+			javaFiles.add(0, "git");
 		}
 		return fSpawner.spawnProcess(javaFiles);
 	}

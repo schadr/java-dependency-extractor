@@ -44,11 +44,13 @@ public class ProcessSpawner {
 		BufferedReader br = new BufferedReader(isr);
 		
 		String line;
-		String output = "";
+		StringBuilder builder = new StringBuilder();
 		
 		try {
 			while ((line = br.readLine()) != null) {
-				output += line + System.getProperty("line.separator");
+				builder.append(line);
+				builder.append(System.getProperty("line.separator"));
+				//output += line + System.getProperty("line.separator");
 			}
 		}
 		catch(Exception e) {
@@ -56,7 +58,8 @@ public class ProcessSpawner {
 			e.printStackTrace();
 		}
 		
-		return output;
+		//return output;
+		return builder.toString();
 	}
 	
 	/**

@@ -62,7 +62,7 @@ public class SCMIterator {
 		// parse new/modified files
 		JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath.getPaths(), fGit.getRepositoryPath());
 		for(File file: fProject.unParsedJavaFiles) {
-			CompilationUnit unit = parser.parseFile(file.getAbsolutePath(), cg);
+			CompilationUnit unit = parser.parseFile(file.getAbsolutePath());
 			String fullyQuallifiedFilename = file.getAbsolutePath();
 			fProject.cUnits.put(fullyQuallifiedFilename, unit);
 		}

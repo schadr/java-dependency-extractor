@@ -9,20 +9,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import as.jcge.models.CallGraph;
-
 public class JavaFileParser {
 	private Collection<String> fClassPath;
 	private Collection<String> fSourcePath;
 	private List<String> fEncodings = null;
 	private String fRepositoryPath = null;
-	
+
 	public JavaFileParser(Collection<String> classPath, Collection<String> sourcePath, String repositoryPath) {
 		fClassPath = classPath;
 		fSourcePath = sourcePath;
@@ -30,12 +29,12 @@ public class JavaFileParser {
 		for (int i = 0; i < sourcePath.size(); ++i) fEncodings.add("UTF-8");
 		fRepositoryPath = repositoryPath;
 	}
-	
+
 	/**
 	 * Parsers a given file using the ASTParser.
 	 * @param file
 	 */
-	public CompilationUnit parseFile(String file, CallGraph cg) {
+	public CompilationUnit parseFile(String file) {
 		// Create parse for JRE 1.0 - 1.6
 		ASTParser parser= ASTParser.newParser(AST.JLS3);
 
@@ -61,13 +60,34 @@ public class JavaFileParser {
 			return null;
 		parser.setUnitName(unitName);
 
-		
+
 		// Parse
 		CompilationUnit unit = (CompilationUnit) parser.createAST(null);
 
 		return unit;	
 	}
-	
+
+	public Map<String, CompilationUnit> parseFiles(List<String> files) {
+		// Create parse for JRE 1.0 - 1.6
+		ASTParser parser= ASTParser.newParser(AST.JLS3);
+
+		// Set up parser
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		parser.setResolveBindings(true);
+		parser.setBindingsRecovery(true);
+		@SuppressWarnings("unchecked")
+		Hashtable<String, String> options = JavaCore.getDefaultOptions();
+		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+		parser.setCompilerOptions(options);
+		parser.setEnvironment(fClassPath.toArray(new String[fClassPath.size()]), 
+				fSourcePath.toArray(new String[fSourcePath.size()]), 
+				fEncodings.toArray(new String[fEncodings.size()]), true);
+		
+		//parser.createASTs(fSourcePath.toArray(new String[fSourcePath.size()]), fEncodings.toArray(new String[fEncodings.size()]), bindingKeys, requestor, monitor)
+		
+		return null;	
+	}
+
 	/**
 	 * This function reads a file into a String.
 	 * @param path The absolute path.
@@ -87,7 +107,7 @@ public class JavaFileParser {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Generates the unit name needed for the AST parser based on
 	 * the repository and file absolute path.
@@ -97,13 +117,13 @@ public class JavaFileParser {
 	private String generateUnitName(String file) {
 		// Get repository name
 		String repoName = fRepositoryPath.substring(fRepositoryPath.lastIndexOf("/")+1);
-		
+
 		// Get starting point of unit name
 		int start = file.indexOf(fRepositoryPath) + fRepositoryPath.length() - repoName.length();
-		
+
 		// Get the unit name
 		String unitName = file.substring(start);
-		
+
 		return unitName;
 	}
 }
