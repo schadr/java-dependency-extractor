@@ -15,6 +15,9 @@ public class PathManager {
 		} else {
 			path += "dummy";
 		}
+		
+		File p = new File(ignoreLeadingPath);
+		ignoreLeadingPath = p.getAbsolutePath();
 		if (!ignoreLeadingPath.endsWith(File.separator)) ignoreLeadingPath += File.separator;
 		
 		Collection<String> pathSegments = getSubPaths(path, ignoreLeadingPath);
@@ -23,6 +26,9 @@ public class PathManager {
 	}
 	
 	public void addFile(String file, String ignoreLeadingPath) {
+		File p = new File(ignoreLeadingPath);
+		ignoreLeadingPath = p.getAbsolutePath();
+		
 		if (!ignoreLeadingPath.endsWith(File.separator)) ignoreLeadingPath += File.separator;
 
 		Collection<String> pathSegments = getSubPaths(file, ignoreLeadingPath);
@@ -35,6 +41,9 @@ public class PathManager {
 	}
 
 	public void removeFile(String file, String ignoreLeadingPath) {
+		File p = new File(ignoreLeadingPath);
+		ignoreLeadingPath = p.getAbsolutePath();
+		
 		if (!ignoreLeadingPath.endsWith(File.separator)) ignoreLeadingPath += File.separator;
 		
 		Collection<String> pathSegments = getSubPaths(file, ignoreLeadingPath);
@@ -48,6 +57,9 @@ public class PathManager {
 		} else {
 			path += "dummy";
 		}
+		
+		File p = new File(ignoreLeadingPath);
+		ignoreLeadingPath = p.getAbsolutePath();
 		if (!ignoreLeadingPath.endsWith(File.separator)) ignoreLeadingPath += File.separator;
 		
 		Collection<String> pathSegments = getSubPaths(path, ignoreLeadingPath);
