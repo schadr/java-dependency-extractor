@@ -50,7 +50,6 @@ public class ProcessSpawner {
 			while ((line = br.readLine()) != null) {
 				builder.append(line);
 				builder.append(System.getProperty("line.separator"));
-				//output += line + System.getProperty("line.separator");
 			}
 		}
 		catch(Exception e) {

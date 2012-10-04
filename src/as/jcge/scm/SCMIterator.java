@@ -79,7 +79,7 @@ public class SCMIterator {
 
 	private void markChangedMethods(String commitID, CallGraph cg) {
 		UnifiedDiffParser diffParser = new UnifiedDiffParser(); 
-		List<FileChange> changes = diffParser.parse(fGit.getCommitDiff(commitID));
+		List<FileChange> changes = diffParser.parse(fGit.getCommitDiffHunkHeaders(commitID));
 		for (FileChange change : changes) {
 			String filename = change.getNewFile();
 			if (filename != null && filename.endsWith("java")) {

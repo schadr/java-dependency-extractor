@@ -107,36 +107,40 @@ public class GitController {
 	 * TODO should be returning a list of fileChanges
 	 * 
 	 * @param commitID
-	 * @param javaFiles files that should be diffed
+	 * @param files files that should be diffed
 	 * @return one string blobb containing all the diff information
 	 */
-	public String getCommitDiffJavaOnly(String commitID, List<String> javaFiles) {
-		if(javaFiles.isEmpty())
+	public String getCommitDiff(String commitID, List<String> files) {
+		if(files.isEmpty())
 			return getCommitDiff(commitID);
 		else {
-			javaFiles.add(0, "--");
-			javaFiles.add(0, commitID);
-			javaFiles.add(0, "--unified=0");
-			javaFiles.add(0, "diff-tree");
-			javaFiles.add(0, "git");
-			javaFiles.add("|");
-			javaFiles.add("grep");
-			javaFiles.add("'+++|---|@@'");
+			files.add(0, "--");
+			files.add(0, commitID);
+			files.add(0, "--unified=0");
+			files.add(0, "diff-tree");
+			files.add(0, "git");
 		}
-		return fSpawner.spawnProcess(javaFiles);
+		return fSpawner.spawnProcess(files);
 	}
 	
-	public String getCommitDiffRangeJavaOnly(String commitID, List<String> javaFiles) {
-		if(javaFiles.isEmpty())
+	public String getCommitDiffHunkHeaders(String commitID) {
+		return fSpawner.spawnProcess(new String[] {"git", "diff-tree", "--unified=0", commitID, "|" , "grep" , "'+++|---|@@'"});
+	}
+	
+	public String getCommitDiffHunkHeaders(String commitID, List<String> files) {
+		if(files.isEmpty())
 			return getCommitDiff(commitID);
 		else {
-			javaFiles.add(0, "--");
-			javaFiles.add(0, commitID);
-			javaFiles.add(0, "--unified=0");
-			javaFiles.add(0, "diff-tree");
-			javaFiles.add(0, "git");
+			files.add(0, "--");
+			files.add(0, commitID);
+			files.add(0, "--unified=0");
+			files.add(0, "diff-tree");
+			files.add(0, "git");
+			files.add("|");
+			files.add("grep");
+			files.add("'+++|---|@@'");
 		}
-		return fSpawner.spawnProcess(javaFiles);
+		return fSpawner.spawnProcess(files);
 	}
 	
 	/**
