@@ -7,6 +7,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FileASTRequestor;
 
 public class JavaFileParser {
 	private Collection<String> fClassPath;
@@ -59,7 +61,7 @@ public class JavaFileParser {
 		if(unitName == null)
 			return null;
 		parser.setUnitName(unitName);
-
+		
 
 		// Parse
 		CompilationUnit unit = (CompilationUnit) parser.createAST(null);
@@ -83,9 +85,19 @@ public class JavaFileParser {
 				fSourcePath.toArray(new String[fSourcePath.size()]), 
 				fEncodings.toArray(new String[fEncodings.size()]), true);
 		
-		//parser.createASTs(fSourcePath.toArray(new String[fSourcePath.size()]), fEncodings.toArray(new String[fEncodings.size()]), bindingKeys, requestor, monitor)
+		final Map<String, CompilationUnit> cUnits = new HashMap<String, CompilationUnit>();
+		FileASTRequestor ar = new FileASTRequestor() {			
+			@Override
+			public void acceptAST(String source, CompilationUnit ast) {
+				cUnits.put(source, ast);
+			}
+		};
 		
-		return null;	
+		String[] encodings = new String[files.size()];
+		for (int i = 0; i < encodings.length; ++i) encodings[i] = "UTF-8";
+		parser.createASTs(files.toArray(new String[files.size()]), encodings, new String[0], ar, null);
+		
+		return cUnits;	
 	}
 
 	/**

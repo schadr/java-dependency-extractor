@@ -1,8 +1,11 @@
 package as.jcge.main;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +24,13 @@ public class Main {
 		SCMIterator iter = new SCMIterator(gc);
 		XMLOutput outputter = new XMLOutput();
 		
-		OutputStreamWriter stdout = new OutputStreamWriter(System.out);
+		File output = new File("/Users/schadr/Desktop/bulk.xml");
+		output.createNewFile();
+		BufferedWriter bw = new BufferedWriter(new FileWriter(output));
+
+		Writer stdout = new OutputStreamWriter(System.out);
+		stdout = bw;
+		
 		outputter.startOutput(stdout, gc.getRepositoryPath().split(File.separator)[gc.getRepositoryPath().split(File.separator).length-2]);
 		while (iter.hasNext()) {
 			try {
@@ -33,5 +42,6 @@ public class Main {
 			}
 		}
 		outputter.stopOutput(stdout);
+		stdout.close();
 	}
 }
