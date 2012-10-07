@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
@@ -51,8 +53,8 @@ public class SCMIterator {
 		return cg;
 	}
 
-	private CallGraph createCallGraph(String commitID) {
-		CallGraph cg = new CallGraph(fGit.getCommitInfo(commitID));
+	private synchronized CallGraph createCallGraph(String commitID) {
+		final CallGraph cg = new CallGraph(fGit.getCommitInfo(commitID));
 
 		if (fProject.javaFiles.size() == 0) return cg;
 		
@@ -64,13 +66,31 @@ public class SCMIterator {
 			files.add(file.getAbsolutePath());
 		}
 		
-		Map<String, CompilationUnit> cUnits = parser.parseFiles(files);
+		final Map<String, CompilationUnit> cUnits = parser.parseFiles(files);
+		
+		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*2);
 		
 		// visit all compilation units
-		for (String fullyQuallifiedFilename : cUnits.keySet()) {
-			CompilationUnit unit = cUnits.get(fullyQuallifiedFilename);
-			Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg);
-			unit.accept(visitor);
+		for (final String fullyQuallifiedFilename : cUnits.keySet()) {
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					CompilationUnit unit = cUnits.get(fullyQuallifiedFilename);
+					Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg);
+					unit.accept(visitor);					
+				}
+			};
+			executor.execute(r);
+		}
+		
+		executor.shutdown();
+		
+		while (!executor.isTerminated()) {
+			try {
+				this.wait(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return cg;

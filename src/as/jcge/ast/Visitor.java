@@ -18,8 +18,8 @@ public class Visitor extends ASTVisitor {
 	
 	private Stack<Method> methodStack;
 	private String file;
-	CompilationUnit cu;
-	CallGraph cg;
+	private CompilationUnit cu;
+	private CallGraph cg;
 	
 	public Visitor(String file, CompilationUnit cu, CallGraph cg) {
 		methodStack = new Stack<Method>();
