@@ -13,7 +13,6 @@ public class JavaJarLocator {
 	public List<File> javaFiles = new ArrayList<File>();
 	public Set<String> jarFiles = new HashSet<String>();
 	public PathManager javaFilePaths = new PathManager();
-	//public Set<String> jarFilePaths = new HashSet<String>();
   
 	public void locate(File rootFolder) {
 		traverse(rootFolder, new JavaDirectoryFilter(), rootFolder);

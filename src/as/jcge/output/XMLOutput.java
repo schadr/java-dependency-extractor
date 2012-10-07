@@ -22,14 +22,31 @@ import as.jcge.models.CallGraph;
 import as.jcge.models.Method;
 
 public class XMLOutput {
+	private Writer fWriter;
+
+	public XMLOutput() {
+		
+	}
+	
+	public XMLOutput(Writer writer) {
+		fWriter = writer;
+	}
 	
 	public void startOutput(Writer out, String projectName) throws IOException {
 		out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
 		out.write("<project name=\""+projectName+"\">");
 	}
 	
+	public void startOutput(String projectName) throws IOException {
+		startOutput(fWriter, projectName);
+	}
+	
 	public void stopOutput(Writer out) throws IOException {
 		out.write("</project>");
+	}
+	
+	public void stopOutput() throws IOException {
+		stopOutput(fWriter);
 	}
 	
 	public void output(CallGraph cg, Writer out) throws ParserConfigurationException, TransformerException {
@@ -56,6 +73,10 @@ public class XMLOutput {
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(out);
 		transformer.transform(source, result);
+	}
+	
+	public void output(CallGraph cg) throws ParserConfigurationException, TransformerException {
+		output(cg, fWriter);
 	}
 
 	private Element createMethodNode(Method m, List<Method> callees, Document doc) {

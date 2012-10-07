@@ -42,12 +42,7 @@ public class SCMIterator {
 		// checkout next revision
 		fGit.reset(commitID);
 		
-		if (fCurrentCommit == 0) {
-			fProject = initJavaProject();
-		} else {
-			Map<String, List<String>> affectedFiles = fGit.getAffectedFiles(fCommits.get(fCurrentCommit-1), commitID);
-			updateJavaProject(fProject, affectedFiles);
-		}
+		fProject = initJavaProject();
 
 		CallGraph cg = createCallGraph(commitID);
 		
@@ -58,6 +53,8 @@ public class SCMIterator {
 
 	private CallGraph createCallGraph(String commitID) {
 		CallGraph cg = new CallGraph(fGit.getCommitInfo(commitID));
+
+		if (fProject.javaFiles.size() == 0) return cg;
 		
 		// parse files
 		JavaFileParser parser = new JavaFileParser(fProject.classPath, fProject.sourcePath.getPaths(), fGit.getRepositoryPath());
@@ -104,34 +101,5 @@ public class SCMIterator {
 		project.javaFiles = locator.getJavaFiles();
 		
 		return project;
-	}
-
-	private void updateJavaProject(JProject project, Map<String, List<String>> affectedFiles) {
-		project.javaFiles.clear();
-		
-		for (String fullyQualifiedFileName : affectedFiles.get(GitController.ADD)) {
-			if (fullyQualifiedFileName.toLowerCase().endsWith("java")) {
-				project.javaFiles.add(new File(fullyQualifiedFileName));
-				project.sourcePath.addFile(fullyQualifiedFileName, fGit.getRepositoryPath());
-			} else if (fullyQualifiedFileName.toLowerCase().endsWith("jar")) {
-				File jar = new File(fullyQualifiedFileName);
-				project.classPath.add(jar.getAbsolutePath());
-			}
-		}
-		
-		for (String fullyQualifiedFileName : affectedFiles.get(GitController.MODIFY)) {
-			if (fullyQualifiedFileName.toLowerCase().endsWith("java")) {
-				project.javaFiles.add(new File(fullyQualifiedFileName));
-			}
-		}
-		
-		for (String fullyQualifiedFileName : affectedFiles.get(GitController.DELETE)) {
-			project.javaFiles.remove(fullyQualifiedFileName);
-			if (fullyQualifiedFileName.toLowerCase().endsWith("java")) {
-				project.sourcePath.removeFile(fullyQualifiedFileName, fGit.getRepositoryPath());
-			}
-		}
-
-		project.classPath.removeAll(affectedFiles.get(GitController.DELETE));
 	}
 }
