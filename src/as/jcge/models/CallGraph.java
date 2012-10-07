@@ -20,7 +20,7 @@ public class CallGraph {
 		return fCommit;
 	}
 	
-	public void addMethod(Method method) {
+	public synchronized void addMethod(Method method) {
 		if(methods.containsKey(method.toString())) {
 			// Update
 			if(method.getStart() != -1 && method.getEnd() != -1) {
@@ -36,7 +36,7 @@ public class CallGraph {
 		}
 	}
 	
-	public void addInvokes(Method caller, Method callee) {
+	public synchronized void addInvokes(Method caller, Method callee) {
 		if(invokes.containsKey(caller)) {
 			List<Method> calls = invokes.get(caller);
 			calls.add(callee);
@@ -91,7 +91,7 @@ public class CallGraph {
 		return methods;
 	}
 
-	public void setMethods(Map<String, Method> methods) {
+	public synchronized void setMethods(Map<String, Method> methods) {
 		this.methods = methods;
 	}
 
@@ -99,7 +99,7 @@ public class CallGraph {
 		return invokes;
 	}
 
-	public void setInvokes(Map<Method, List<Method>> invokes) {
+	public synchronized void setInvokes(Map<Method, List<Method>> invokes) {
 		this.invokes = invokes;
 	}
 
