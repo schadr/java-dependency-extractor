@@ -18,14 +18,16 @@ public class Visitor extends ASTVisitor {
 	
 	private Stack<Method> methodStack;
 	private String file;
-	private CompilationUnit cu;
-	private CallGraph cg;
+	CompilationUnit cu;
+	CallGraph cg;
+	private BlockingBindingResolver bbr;
 	
-	public Visitor(String file, CompilationUnit cu, CallGraph cg) {
+	public Visitor(String file, CompilationUnit cu, CallGraph cg, BlockingBindingResolver bbr) {
 		methodStack = new Stack<Method>();
 		this.file = file;
 		this.cg = cg;
 		this.cu = cu;
+		this.bbr = bbr;
 	}
 	
 	/**
@@ -35,7 +37,7 @@ public class Visitor extends ASTVisitor {
 	@Override
 	public boolean visit(MethodDeclaration node) {
 		// Insert the method into the DB
-		IMethodBinding methodBinding = node.resolveBinding();
+		IMethodBinding methodBinding = bbr.resolveBinding(node);
 		Method method = createMethodFromBinding(node, methodBinding);
 		
 		if(method != null) {
@@ -66,7 +68,7 @@ public class Visitor extends ASTVisitor {
 	@Override
 	public boolean visit(MethodInvocation node) {
 		// Insert the method into the DB
-		IMethodBinding methodBinding = node.resolveMethodBinding();
+		IMethodBinding methodBinding = bbr.resolveMethodBinding(node);
 		Method method = createMethodFromBinding(null, methodBinding);
 		
 		// Insert
@@ -86,7 +88,7 @@ public class Visitor extends ASTVisitor {
 	@Override
 	public boolean visit(ClassInstanceCreation node) {
 		// Resolve the constructor
-		IMethodBinding methodBinding = node.resolveConstructorBinding();
+		IMethodBinding methodBinding = bbr.resolveConstructorBinding(node);
 		Method method = createMethodFromBinding(null, methodBinding);
 		
 		// Insert
@@ -102,7 +104,7 @@ public class Visitor extends ASTVisitor {
 	private Method createMethodFromBinding(MethodDeclaration node, IMethodBinding methodBinding) {
 		if(methodBinding != null) {
 			Method method = new Method();
-			method.setName(methodBinding.getName());
+			method.setName(bbr.getName(methodBinding));
 			if(node != null) {
 				// Handle working directory
 				method.setFile(file);
@@ -111,22 +113,22 @@ public class Visitor extends ASTVisitor {
 			}
 			
 			// Parameters
-			ITypeBinding[] parameters = methodBinding.getParameterTypes();
+			ITypeBinding[] parameters = bbr.getParameterTypes(methodBinding);
 			if(parameters.length > 0) {
 				for(int i = 0; i < parameters.length; i++) {
 					if(parameters[i] != null)
-						method.addParameter(parameters[i].getQualifiedName());
+						method.addParameter(bbr.getQualifiedName(parameters[i]));
 				}
 			}
 			
 			// Class and Package
-			ITypeBinding clazz = methodBinding.getDeclaringClass();
+			ITypeBinding clazz = bbr.getDeclaringClass(methodBinding);
 			if(clazz != null) {
-				method.setClazz(clazz.getName());
+				method.setClazz(bbr.getName(clazz));
 				
-				IPackageBinding pkg = clazz.getPackage();
+				IPackageBinding pkg = bbr.getPackage(clazz);
 				if(pkg != null)
-					method.setPkg(pkg.getName());
+					method.setPkg(bbr.getName(pkg));
 			}
 			
 			return method;

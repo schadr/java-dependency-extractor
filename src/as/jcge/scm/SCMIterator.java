@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import as.jcge.ast.BlockingBindingResolver;
 import as.jcge.ast.JavaFileParser;
 import as.jcge.ast.Visitor;
 import as.jcge.models.CallGraph;
@@ -71,12 +72,13 @@ public class SCMIterator {
 		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*2);
 		
 		// visit all compilation units
+		final BlockingBindingResolver bbr = new BlockingBindingResolver();
 		for (final String fullyQuallifiedFilename : cUnits.keySet()) {
 			Runnable r = new Runnable() {
 				@Override
 				public void run() {
 					CompilationUnit unit = cUnits.get(fullyQuallifiedFilename);
-					Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg);
+					Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg, bbr);
 					unit.accept(visitor);					
 				}
 			};
