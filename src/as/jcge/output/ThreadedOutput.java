@@ -26,6 +26,7 @@ public class ThreadedOutput {
 	}
 	
 	public void add(CallGraph cg) {
+		
 		fQueue.add(cg);
 	}
 	
@@ -39,6 +40,14 @@ public class ThreadedOutput {
 		fStop = true;
 		fWorker.join();
 		fOut.stopOutput();
+	}
+	
+	private synchronized void block() {
+		try {
+			wait(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	class QueueWorker extends Thread {
