@@ -53,7 +53,7 @@ public class BlockingBindingResolver {
 	}
 
 	public ITypeBinding[] getParameterTypes(IMethodBinding methodBinding) {
-		//while (!obtainLock()) { waiting(delay); }		
+		while (!obtainLock()) { waiting(delay); }		
 		
 		ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
 		
