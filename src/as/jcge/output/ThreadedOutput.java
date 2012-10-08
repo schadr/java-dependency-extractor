@@ -25,9 +25,8 @@ public class ThreadedOutput {
 		fQueue = new ArrayBlockingQueue<CallGraph>(queueSize);
 	}
 	
-	public void add(CallGraph cg) {
-		
-		fQueue.add(cg);
+	public void add(CallGraph cg) throws InterruptedException {
+		while (!fQueue.offer(cg,10,TimeUnit.MILLISECONDS)) {}
 	}
 	
 	public void start(String projectName) throws IOException {
@@ -40,14 +39,6 @@ public class ThreadedOutput {
 		fStop = true;
 		fWorker.join();
 		fOut.stopOutput();
-	}
-	
-	private synchronized void block() {
-		try {
-			wait(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	class QueueWorker extends Thread {

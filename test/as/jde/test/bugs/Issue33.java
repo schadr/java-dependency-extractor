@@ -21,21 +21,21 @@ import as.jde.test.util.RepositoryManager;
 
 public class Issue33 {
 	private String repoPath = null;
-	
+
 	@Before
 	public void setup() {
 		RepositoryManager rm = RepositoryManager.getInstance();
 		rm.createSelfRepository();
 		repoPath = RepositoryManager.SELF_REPO_PATH;
 	}
-	
+
 	@After
 	public void tearDown() {
-		
+
 	}
-	
+
 	@Test
-	public void test() {
+	public void test() throws InterruptedException, IOException {
 		GitController git = new GitController(repoPath);
 		SCMIterator iter = new SCMIterator(git);
 		ThreadedOutput out = new ThreadedOutput(new XMLOutput(new Writer() {
@@ -48,12 +48,14 @@ public class Issue33 {
 
 			@Override
 			public void write(char[] arg0, int arg1, int arg2) throws IOException {}
-			}));
+		}));
+
+		out.start("self");
 		
 		try {
-		while (iter.hasNext()) {
-			out.add(iter.next());
-		}
+			while (iter.hasNext()) {
+				out.add(iter.next());
+			}
 		} catch (IllegalStateException e) {
 			if (e.getMessage().equals("Queue full")) {
 				fail("Issue 33");
@@ -61,6 +63,8 @@ public class Issue33 {
 				throw e;
 			}
 		}
+		
+		out.stop();
 	}
 
 }
