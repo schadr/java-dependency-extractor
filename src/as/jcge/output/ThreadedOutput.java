@@ -2,6 +2,8 @@ package as.jcge.output;
 
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,7 +13,7 @@ import as.jcge.models.CallGraph;
 
 public class ThreadedOutput {
 	private XMLOutput fOut;
-	private ArrayBlockingQueue<CallGraph> fQueue;
+	private BlockingQueue<CallGraph> fQueue;
 	private boolean fStop;
 	private QueueWorker fWorker = new QueueWorker();
 	
@@ -22,7 +24,11 @@ public class ThreadedOutput {
 	
 	public ThreadedOutput(XMLOutput output, int queueSize) {
 		fOut = output;
-		fQueue = new ArrayBlockingQueue<CallGraph>(queueSize);
+		if (queueSize != -1) {
+			fQueue = new ArrayBlockingQueue<CallGraph>(queueSize);
+		} else {
+			fQueue = new LinkedBlockingQueue<CallGraph>();
+		}
 	}
 	
 	public void add(CallGraph cg) throws InterruptedException {

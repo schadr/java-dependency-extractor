@@ -16,6 +16,10 @@ public class ArgumentParser {
 	public static final String OPT_IGNORE_FOLDER = "--ignore";
 	private static final String OPT_IGNORE_FOLDER_SHORT = "-i";
 	public static final String IGNORE_FOLDER_DEFAULT = "\\b\\B";
+	
+	public static final String OPT_QUEUE_LIMIT = "--queue-size";
+	private static final String OPT_QUEUE_LIMIT_SHORT = "-q";
+	private static final String OPT_QUEUE_LIMIT_DEFAULT = "10";
 
 	public static final String OPT_REPOSITORY_LOCATION = "repository location";
 	
@@ -25,6 +29,7 @@ public class ArgumentParser {
 		System.out.println("\t"+OPT_REPOSITORY_SHORT+" type | "+OPT_REPOSITORY+"=type\n\t\tsepcifies the type of repository the source is contained, currently supported repos are "+REPOSITORY_GIT+" (default)");
 		System.out.println("\t"+OPT_OUTPUT_FORMAT_SHORT+" type | "+OPT_OUTPUT_FORMAT+"=type\n\t\tspecifies the format of the output, currently supported are "+OUTPUT_XML+" (default)");
 		System.out.println("\t"+OPT_IGNORE_FOLDER_SHORT+" regexp | "+OPT_IGNORE_FOLDER+"=regexp\n\t\tspecified regular expression of foldernames that should be ignored.");
+		System.out.println("\t"+OPT_QUEUE_LIMIT_SHORT+" size | " + OPT_QUEUE_LIMIT+"=size\n\t\tspecifies the size of the output queue (default: "+OPT_QUEUE_LIMIT_DEFAULT+") (-1: no limit)");
 	}
 	
 	public static String cleanArgument(String arg, String[] opts) {
@@ -67,6 +72,13 @@ public class ArgumentParser {
 				String[] flags = {OPT_IGNORE_FOLDER, OPT_IGNORE_FOLDER_SHORT};
 				if (!hasValue(optArgs, arg, flags, OPT_IGNORE_FOLDER, null)) {
 					addNextValue(args, optArgs, i++, OPT_IGNORE_FOLDER, null);
+				}
+			}
+			if (arg.startsWith(OPT_QUEUE_LIMIT_SHORT) || arg.startsWith(OPT_QUEUE_LIMIT)) {
+				okArg=true;
+				String[] flags = {OPT_QUEUE_LIMIT, OPT_QUEUE_LIMIT_SHORT};
+				if (!hasValue(optArgs, arg, flags, OPT_QUEUE_LIMIT, null)) {
+					addNextValue(args, optArgs, i++, OPT_QUEUE_LIMIT, null);
 				}
 			}
 			if (!okArg) {

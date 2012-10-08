@@ -23,7 +23,7 @@ public class Main {
 		SCMIterator iter = new SCMIterator(gc, optArgs.get(ArgumentParser.OPT_IGNORE_FOLDER));
 		Writer stdout = new OutputStreamWriter(System.out);
 		XMLOutput outputter = new XMLOutput(stdout);
-		ThreadedOutput out = new ThreadedOutput(outputter);
+		ThreadedOutput out = new ThreadedOutput(outputter, Integer.parseInt(optArgs.get(ArgumentParser.OPT_QUEUE_LIMIT)));
 		
 		out.start(gc.getRepositoryPath().split(File.separator)[gc.getRepositoryPath().split(File.separator).length-2]);
 		while (iter.hasNext()) {
