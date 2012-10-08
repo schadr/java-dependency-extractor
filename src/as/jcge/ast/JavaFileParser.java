@@ -38,7 +38,7 @@ public class JavaFileParser {
 	 */
 	public CompilationUnit parseFile(String file) {
 		// Create parse for JRE 1.0 - 1.6
-		ASTParser parser= ASTParser.newParser(AST.JLS3);
+		ASTParser parser= ASTParser.newParser(AST.JLS4);
 
 		// Set up parser
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -71,7 +71,7 @@ public class JavaFileParser {
 
 	public Map<String, CompilationUnit> parseFiles(List<String> files) {
 		// Create parse for JRE 1.0 - 1.6
-		ASTParser parser= ASTParser.newParser(AST.JLS3);
+		ASTParser parser= ASTParser.newParser(AST.JLS4);
 
 		// Set up parser
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);

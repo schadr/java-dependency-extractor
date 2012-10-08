@@ -78,7 +78,6 @@ public class SCMIterator {
 		final BlockingBindingResolver bbr = new BlockingBindingResolver();
 		for (final String fullyQuallifiedFilename : cUnits.keySet()) {
 			Runnable r = new Runnable() {
-				@Override
 				public void run() {
 					CompilationUnit unit = cUnits.get(fullyQuallifiedFilename);
 					Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg, bbr);

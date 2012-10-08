@@ -48,7 +48,6 @@ public class JavaJarLocator {
 			ignoreFolders = ignoreFolderNames;
 		}
 
-		@Override
 		public boolean accept(File pathname) {
 			if (pathname.isDirectory()) {
 				for (String f : ignoreFolders) {
