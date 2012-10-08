@@ -20,7 +20,7 @@ public class Main {
 	public static void main(String[] args) throws ParserConfigurationException, TransformerException, IOException, InterruptedException {
 		Map<String,String> optArgs = ArgumentParser.parseArguments(args);
 		GitController gc = new GitController(optArgs.get(ArgumentParser.OPT_REPOSITORY_LOCATION));
-		SCMIterator iter = new SCMIterator(gc);
+		SCMIterator iter = new SCMIterator(gc, optArgs.get(ArgumentParser.OPT_IGNORE_FOLDER));
 		Writer stdout = new OutputStreamWriter(System.out);
 		XMLOutput outputter = new XMLOutput(stdout);
 		ThreadedOutput out = new ThreadedOutput(outputter);

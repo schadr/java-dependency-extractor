@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
@@ -26,10 +27,12 @@ public class SCMIterator {
 	private List<String> fCommits = null;
 	
 	private JProject fProject = null;
+	private Pattern fIgnoreFolderPattern;
 	
-	public SCMIterator(GitController gitController) {
+	public SCMIterator(GitController gitController, String ignoreFolderRegExp) {
 		fGit = gitController;
 		fCommits = fGit.getAllCommits();
+		fIgnoreFolderPattern = Pattern.compile(ignoreFolderRegExp);
 	}
 
 	public boolean hasNext() {
@@ -117,7 +120,7 @@ public class SCMIterator {
 		String[] foldersToIgnrore = {".git"};
 		
 		JavaJarLocator locator = new JavaJarLocator();
-		locator.locate(new File(fGit.getRepositoryPath()), foldersToIgnrore);
+		locator.locate(new File(fGit.getRepositoryPath()), foldersToIgnrore, fIgnoreFolderPattern);
 		project.classPath = locator.getJarFiles();
 		project.sourcePath = locator.getJavaFilePaths();
 		project.javaFiles = locator.getJavaFiles();

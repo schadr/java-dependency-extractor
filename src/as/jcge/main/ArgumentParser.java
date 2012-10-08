@@ -12,6 +12,10 @@ public class ArgumentParser {
 	public static final String OPT_OUTPUT_FORMAT = "--output-format";
 	private static final String OPT_OUTPUT_FORMAT_SHORT = "-f";
 	public static final String OUTPUT_XML = "xml";
+	
+	public static final String OPT_IGNORE_FOLDER = "--ignore";
+	private static final String OPT_IGNORE_FOLDER_SHORT = "-i";
+	public static final String IGNORE_FOLDER_DEFAULT = "\\b\\B";
 
 	public static final String OPT_REPOSITORY_LOCATION = "repository location";
 	
@@ -20,6 +24,7 @@ public class ArgumentParser {
 		System.out.println("options:");
 		System.out.println("\t"+OPT_REPOSITORY_SHORT+" type | "+OPT_REPOSITORY+"=type\n\t\tsepcifies the type of repository the source is contained, currently supported repos are "+REPOSITORY_GIT+" (default)");
 		System.out.println("\t"+OPT_OUTPUT_FORMAT_SHORT+" type | "+OPT_OUTPUT_FORMAT+"=type\n\t\tspecifies the format of the output, currently supported are "+OUTPUT_XML+" (default)");
+		System.out.println("\t"+OPT_IGNORE_FOLDER_SHORT+" regexp | "+OPT_IGNORE_FOLDER+"=regexp\n\t\tspecified regular expression of foldernames that should be ignored.");
 	}
 	
 	public static String cleanArgument(String arg, String[] opts) {
@@ -57,6 +62,13 @@ public class ArgumentParser {
 					addNextValue(args, optArgs, i++, OPT_OUTPUT_FORMAT, legitValues);
 				}
 			}
+			if (arg.startsWith(OPT_IGNORE_FOLDER_SHORT) || arg.startsWith(OPT_IGNORE_FOLDER)) {
+				okArg=true;
+				String[] flags = {OPT_IGNORE_FOLDER, OPT_IGNORE_FOLDER_SHORT};
+				if (!hasValue(optArgs, arg, flags, OPT_IGNORE_FOLDER, null)) {
+					addNextValue(args, optArgs, i++, OPT_IGNORE_FOLDER, null);
+				}
+			}
 			if (!okArg) {
 				if (i == args.length - 1) {
 					if (!args[i].endsWith("/")) args[i] = args[i] + File.separator;
@@ -77,6 +89,7 @@ public class ArgumentParser {
 				
 		optArgs.put(OPT_OUTPUT_FORMAT, OUTPUT_XML);
 		optArgs.put(OPT_REPOSITORY, REPOSITORY_GIT);
+		optArgs.put(OPT_IGNORE_FOLDER, IGNORE_FOLDER_DEFAULT);
 				
 		return optArgs;
 	}

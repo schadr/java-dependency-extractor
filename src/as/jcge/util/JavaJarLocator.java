@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
  
 public class JavaJarLocator {
 	
@@ -14,39 +15,34 @@ public class JavaJarLocator {
 	public Set<String> jarFiles = new HashSet<String>();
 	public PathManager javaFilePaths = new PathManager();
   
-	public void locate(File rootFolder) {
-		traverse(rootFolder, new JavaDirectoryFilter(), rootFolder);
+	
+	public void locate(File rootFolder, String[] ignoreFolderNames, Pattern ignoreFolderPattern) {
+		traverse(rootFolder, new JavaDirectoryFilter(ignoreFolderNames), rootFolder, ignoreFolderPattern);
 	}
 	
-	public void locate(File rootFolder, String[] ignoreFolderNames) {
-		traverse(rootFolder, new JavaDirectoryFilter(ignoreFolderNames), rootFolder);
-	}
-	
-	private int traverse(File path, FileFilter javaDirectoryFileFilter, File rootPath) {
+	private void traverse(File path, FileFilter javaDirectoryFileFilter, File rootPath, Pattern ignoreFolderPattern) {
 		File allFilesAndDirectories[] = path.listFiles(javaDirectoryFileFilter);
 		
 		for (File entry : allFilesAndDirectories) {
 			if (entry.isDirectory()) {
-				javaFilePaths.add(entry.getAbsolutePath(), rootPath.getAbsolutePath().toString());
-				traverse(entry, javaDirectoryFileFilter, rootPath);
+				Matcher m = ignoreFolderPattern.matcher(entry.getAbsolutePath());
+				if (!m.matches()) { 
+					javaFilePaths.add(entry.getAbsolutePath(), rootPath.getAbsolutePath().toString());
+					traverse(entry, javaDirectoryFileFilter, rootPath, ignoreFolderPattern);
+				}
 			} else {
 				if (entry.getName().toLowerCase().endsWith(".java")) {
 					javaFiles.add(entry);
 				} else {
 					jarFiles.add(entry.getAbsolutePath());
-					//jarFilePaths.add(entry.getAbsolutePath());
 				}
 			}
 		}
-		return 0;
 	}
 			
 	private static class JavaDirectoryFilter implements FileFilter {
 		private String[] extension = {"java", "jar"};
 		private String[] ignoreFolders = {};
-
-		public JavaDirectoryFilter() {
-		}
 		
 		public JavaDirectoryFilter(String[] ignoreFolderNames) {
 			ignoreFolders = ignoreFolderNames;
