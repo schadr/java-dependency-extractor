@@ -1,4 +1,4 @@
-package as.jde.models;
+package as.jde.scm;
 
 public class Owner
 {

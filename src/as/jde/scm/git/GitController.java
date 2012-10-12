@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import as.jde.models.Owner;
 import as.jde.scm.Commit;
+import as.jde.scm.Owner;
 import as.jde.util.ProcessSpawner;
 
 public class GitController {
