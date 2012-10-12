@@ -13,12 +13,12 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import as.jde.ast.BlockingBindingResolver;
 import as.jde.ast.JavaFileParser;
 import as.jde.ast.Visitor;
+import as.jde.diff.FileChange;
+import as.jde.diff.Range;
+import as.jde.diff.UnifiedDiffParser;
 import as.jde.graph.CallGraph;
-import as.jde.models.FileChange;
-import as.jde.models.JProject;
-import as.jde.models.Range;
 import as.jde.scm.git.GitController;
-import as.jde.scm.git.UnifiedDiffParser;
+import as.jde.util.JProject;
 import as.jde.util.JavaJarLocator;
 
 public class SCMIterator {

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import as.jde.models.Method;
 import as.jde.scm.Commit;
 
 public class CallGraph {

@@ -19,7 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import as.jde.graph.CallGraph;
-import as.jde.models.Method;
+import as.jde.graph.Method;
 
 public class XMLOutput {
 	private Writer fWriter;

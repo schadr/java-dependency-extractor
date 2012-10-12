@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import as.jde.graph.CallGraph;
-import as.jde.models.Method;
+import as.jde.graph.Method;
 
 public class Visitor extends ASTVisitor {
 	
