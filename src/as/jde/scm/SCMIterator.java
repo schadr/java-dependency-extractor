@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import as.jde.ast.BlockingBindingResolver;
 import as.jde.ast.JavaFileParser;
-import as.jde.ast.Visitor;
+import as.jde.ast.ASTVisitor;
 import as.jde.diff.FileChange;
 import as.jde.diff.Range;
 import as.jde.diff.UnifiedDiffParser;
@@ -80,7 +80,7 @@ public class SCMIterator {
 			Runnable r = new Runnable() {
 				public void run() {
 					CompilationUnit unit = cUnits.get(fullyQuallifiedFilename);
-					Visitor visitor = new Visitor(fullyQuallifiedFilename, unit, cg, bbr);
+					ASTVisitor visitor = new ASTVisitor(fullyQuallifiedFilename, unit, cg, bbr);
 					unit.accept(visitor);					
 				}
 			};

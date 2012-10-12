@@ -2,7 +2,6 @@ package as.jde.ast;
 
 import java.util.Stack;
 
-import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -14,7 +13,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import as.jde.graph.CallGraph;
 import as.jde.graph.Method;
 
-public class Visitor extends ASTVisitor {
+public class ASTVisitor extends org.eclipse.jdt.core.dom.ASTVisitor {
 	
 	private Stack<Method> methodStack;
 	private String file;
@@ -22,7 +21,7 @@ public class Visitor extends ASTVisitor {
 	CallGraph cg;
 	private BlockingBindingResolver bbr;
 	
-	public Visitor(String file, CompilationUnit cu, CallGraph cg, BlockingBindingResolver bbr) {
+	public ASTVisitor(String file, CompilationUnit cu, CallGraph cg, BlockingBindingResolver bbr) {
 		methodStack = new Stack<Method>();
 		this.file = file;
 		this.cg = cg;
