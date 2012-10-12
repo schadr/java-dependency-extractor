@@ -1,4 +1,4 @@
-package as.jcge.util;
+package as.jde.util;
 
 import java.io.BufferedReader;
 import java.io.File;

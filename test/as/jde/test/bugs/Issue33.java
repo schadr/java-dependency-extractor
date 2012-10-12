@@ -13,11 +13,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import as.jcge.main.ArgumentParser;
-import as.jcge.output.ThreadedOutput;
-import as.jcge.output.XMLOutput;
-import as.jcge.scm.SCMIterator;
-import as.jcge.scm.git.GitController;
+import as.jde.main.ArgumentParser;
+import as.jde.output.ThreadedOutput;
+import as.jde.output.XMLOutput;
+import as.jde.scm.SCMIterator;
+import as.jde.scm.git.GitController;
 import as.jde.test.util.RepositoryManager;
 
 public class Issue33 {

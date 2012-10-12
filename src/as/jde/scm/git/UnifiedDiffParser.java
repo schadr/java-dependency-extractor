@@ -1,12 +1,12 @@
-package as.jcge.scm.git;
+package as.jde.scm.git;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import as.jcge.models.FileChange;
-import as.jcge.models.Range;
+import as.jde.models.FileChange;
+import as.jde.models.Range;
 
 public class UnifiedDiffParser {
 	public static final String DIFF_OLD_FILE = "^---.*";

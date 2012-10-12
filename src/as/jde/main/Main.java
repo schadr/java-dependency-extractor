@@ -1,4 +1,4 @@
-package as.jcge.main;
+package as.jde.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,11 +9,11 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import as.jcge.models.CallGraph;
-import as.jcge.output.ThreadedOutput;
-import as.jcge.output.XMLOutput;
-import as.jcge.scm.SCMIterator;
-import as.jcge.scm.git.GitController;
+import as.jde.models.CallGraph;
+import as.jde.output.ThreadedOutput;
+import as.jde.output.XMLOutput;
+import as.jde.scm.SCMIterator;
+import as.jde.scm.git.GitController;
 
 
 public class Main {

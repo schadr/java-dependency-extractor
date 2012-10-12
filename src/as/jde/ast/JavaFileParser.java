@@ -1,4 +1,4 @@
-package as.jcge.ast;
+package as.jde.ast;
 
 import java.io.File;
 import java.io.FileInputStream;

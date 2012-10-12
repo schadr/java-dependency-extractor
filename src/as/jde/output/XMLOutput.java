@@ -1,4 +1,4 @@
-package as.jcge.output;
+package as.jde.output;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -18,8 +18,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import as.jcge.models.CallGraph;
-import as.jcge.models.Method;
+import as.jde.models.CallGraph;
+import as.jde.models.Method;
 
 public class XMLOutput {
 	private Writer fWriter;

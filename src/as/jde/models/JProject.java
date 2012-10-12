@@ -1,10 +1,10 @@
-package as.jcge.models;
+package as.jde.models;
 
 import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-import as.jcge.util.PathManager;
+import as.jde.util.PathManager;
 
 public class JProject {
 

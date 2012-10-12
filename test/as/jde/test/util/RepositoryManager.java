@@ -2,7 +2,7 @@ package as.jde.test.util;
 
 import java.io.File;
 
-import as.jcge.util.ProcessSpawner;
+import as.jde.util.ProcessSpawner;
 
 public class RepositoryManager {
 	public static final String SELF_REPO_URI = "git://github.com/schadr/java-dependency-extractor.git";

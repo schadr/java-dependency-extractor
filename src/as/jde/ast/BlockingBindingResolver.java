@@ -1,4 +1,4 @@
-package as.jcge.ast;
+package as.jde.ast;
 
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.IMethodBinding;

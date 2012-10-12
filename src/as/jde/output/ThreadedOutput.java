@@ -1,4 +1,4 @@
-package as.jcge.output;
+package as.jde.output;
 
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import as.jcge.models.CallGraph;
+import as.jde.models.CallGraph;
 
 public class ThreadedOutput {
 	private XMLOutput fOut;

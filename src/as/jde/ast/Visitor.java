@@ -1,4 +1,4 @@
-package as.jcge.ast;
+package as.jde.ast;
 
 import java.util.Stack;
 
@@ -11,8 +11,8 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
-import as.jcge.models.CallGraph;
-import as.jcge.models.Method;
+import as.jde.models.CallGraph;
+import as.jde.models.Method;
 
 public class Visitor extends ASTVisitor {
 	

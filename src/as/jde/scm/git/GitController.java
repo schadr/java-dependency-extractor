@@ -1,4 +1,4 @@
-package as.jcge.scm.git;
+package as.jde.scm.git;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import as.jcge.models.Owner;
-import as.jcge.scm.Commit;
-import as.jcge.util.ProcessSpawner;
+import as.jde.models.Owner;
+import as.jde.scm.Commit;
+import as.jde.util.ProcessSpawner;
 
 public class GitController {
 	public final static String ADD = "A";

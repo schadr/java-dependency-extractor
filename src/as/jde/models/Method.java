@@ -1,4 +1,4 @@
-package as.jcge.models;
+package as.jde.models;
 
 import java.util.ArrayList;
 import java.util.List;

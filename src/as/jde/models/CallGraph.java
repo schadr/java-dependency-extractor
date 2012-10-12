@@ -1,11 +1,11 @@
-package as.jcge.models;
+package as.jde.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import as.jcge.scm.Commit;
+import as.jde.scm.Commit;
 
 public class CallGraph {
 	private Map<String, Method> methods = new HashMap<String, Method>();

@@ -1,4 +1,4 @@
-package as.jcge.models;
+package as.jde.models;
 
 public class Owner
 {

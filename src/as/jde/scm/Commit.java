@@ -1,4 +1,4 @@
-package as.jcge.scm;
+package as.jde.scm;
 
 
 public class Commit {

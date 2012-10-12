@@ -1,4 +1,4 @@
-package as.jcge.scm;
+package as.jde.scm;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,16 +10,16 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import as.jcge.ast.BlockingBindingResolver;
-import as.jcge.ast.JavaFileParser;
-import as.jcge.ast.Visitor;
-import as.jcge.models.CallGraph;
-import as.jcge.models.FileChange;
-import as.jcge.models.JProject;
-import as.jcge.models.Range;
-import as.jcge.scm.git.GitController;
-import as.jcge.scm.git.UnifiedDiffParser;
-import as.jcge.util.JavaJarLocator;
+import as.jde.ast.BlockingBindingResolver;
+import as.jde.ast.JavaFileParser;
+import as.jde.ast.Visitor;
+import as.jde.models.CallGraph;
+import as.jde.models.FileChange;
+import as.jde.models.JProject;
+import as.jde.models.Range;
+import as.jde.scm.git.GitController;
+import as.jde.scm.git.UnifiedDiffParser;
+import as.jde.util.JavaJarLocator;
 
 public class SCMIterator {
 	private GitController fGit = null;
@@ -72,7 +72,7 @@ public class SCMIterator {
 		
 		final Map<String, CompilationUnit> cUnits = parser.parseFiles(files);
 		
-		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*2);
+		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		
 		// visit all compilation units
 		final BlockingBindingResolver bbr = new BlockingBindingResolver();

@@ -1,4 +1,4 @@
-package as.jcge.main;
+package as.jde.main;
 
 import java.io.File;
 import java.util.HashMap;
