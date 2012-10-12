@@ -18,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import as.jde.models.CallGraph;
+import as.jde.graph.CallGraph;
 import as.jde.models.Method;
 
 public class XMLOutput {

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import as.jde.models.CallGraph;
+import as.jde.graph.CallGraph;
 
 public class ThreadedOutput {
 	private XMLOutput fOut;

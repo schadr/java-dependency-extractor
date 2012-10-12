@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import as.jde.ast.BlockingBindingResolver;
 import as.jde.ast.JavaFileParser;
 import as.jde.ast.Visitor;
-import as.jde.models.CallGraph;
+import as.jde.graph.CallGraph;
 import as.jde.models.FileChange;
 import as.jde.models.JProject;
 import as.jde.models.Range;

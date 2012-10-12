@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import as.jde.models.CallGraph;
+import as.jde.graph.CallGraph;
 import as.jde.output.ThreadedOutput;
 import as.jde.output.XMLOutput;
 import as.jde.scm.SCMIterator;
