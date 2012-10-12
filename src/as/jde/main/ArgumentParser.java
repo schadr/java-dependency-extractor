@@ -20,6 +20,13 @@ public class ArgumentParser {
 	public static final String OPT_QUEUE_LIMIT = "--queue-size";
 	private static final String OPT_QUEUE_LIMIT_SHORT = "-q";
 	private static final String QUEUE_LIMIT_DEFAULT = "10";
+	
+	public static final String OPT_TMP_FOLDER = "--folder";
+	private static final String OPT_TMP_FOLDER_SHORT = "-f";
+	public static final String OPT_TMP_COPIES = "--num-copies";
+	private static final String OPT_TMP_COPIES_SHORT = "-n";
+	private static final String TMP_COPIES_DEFAULT = "1";
+	
 
 	public static final String OPT_REPOSITORY_LOCATION = "repository location";
 	
@@ -29,7 +36,11 @@ public class ArgumentParser {
 		System.out.println("\t"+OPT_REPOSITORY_SHORT+" type | "+OPT_REPOSITORY+"=type\n\t\tsepcifies the type of repository the source is contained, currently supported repos are "+REPOSITORY_GIT+" (default)");
 		System.out.println("\t"+OPT_OUTPUT_FORMAT_SHORT+" type | "+OPT_OUTPUT_FORMAT+"=type\n\t\tspecifies the format of the output, currently supported are "+OUTPUT_XML+" (default)");
 		System.out.println("\t"+OPT_IGNORE_FOLDER_SHORT+" regexp | "+OPT_IGNORE_FOLDER+"=regexp\n\t\tspecified regular expression of foldernames that should be ignored.");
-		System.out.println("\t"+OPT_QUEUE_LIMIT_SHORT+" size | " + OPT_QUEUE_LIMIT+"=size\n\t\tspecifies the size of the output queue (default: "+QUEUE_LIMIT_DEFAULT+") (-1: no limit)");
+		System.out.println("\t"+OPT_QUEUE_LIMIT_SHORT+" size | "+OPT_QUEUE_LIMIT+"=size\n\t\tspecifies the size of the output queue (default: "+QUEUE_LIMIT_DEFAULT+") (-1: no limit)");
+		System.out.println("\t"+OPT_TMP_FOLDER_SHORT+" foldername | "+OPT_TMP_FOLDER+"=foldername\n\t\tspecifies a folder that the current user can write to to created multiple copies of the repository"
+							+"\n\t\tnote that by default the git repo specified will be used to check out all versions, even if a tmp folder is specified "
+							+"\n\t\tas long as the number of copies is not greater than 1.");
+		System.out.println("\t"+OPT_TMP_COPIES_SHORT+" number_of_copies | "+OPT_TMP_COPIES+"=number_of_copies\n\t\tspecifies the number of copies of repo made, if a folder for the copies was specified (default=1).");
 	}
 	
 	public static String cleanArgument(String arg, String[] opts) {
@@ -81,6 +92,20 @@ public class ArgumentParser {
 					addNextValue(args, optArgs, i++, OPT_QUEUE_LIMIT, null);
 				}
 			}
+			if (arg.startsWith(OPT_TMP_COPIES) || arg.startsWith(OPT_TMP_COPIES_SHORT)) {
+				okArg=true;
+				String[] flags = {OPT_TMP_COPIES, OPT_TMP_COPIES_SHORT};
+				if(!hasValue(optArgs, arg, flags, OPT_TMP_COPIES, null)) {
+					addNextValue(args, optArgs, i++, OPT_TMP_COPIES, null);
+				}
+			}
+			if (arg.startsWith(OPT_TMP_FOLDER) || arg.startsWith(OPT_TMP_FOLDER_SHORT)) {
+				okArg=true;
+				String[] flags = {OPT_TMP_FOLDER, OPT_TMP_FOLDER_SHORT};
+				if(!hasValue(optArgs, arg, flags, OPT_TMP_FOLDER, null)) {
+					addNextValue(args, optArgs, i++, OPT_TMP_FOLDER, null);
+				}
+			}
 			if (!okArg) {
 				if (i == args.length - 1) {
 					if (!args[i].endsWith("/")) args[i] = args[i] + File.separator;
@@ -103,6 +128,7 @@ public class ArgumentParser {
 		optArgs.put(OPT_REPOSITORY, REPOSITORY_GIT);
 		optArgs.put(OPT_QUEUE_LIMIT, QUEUE_LIMIT_DEFAULT);
 		optArgs.put(OPT_IGNORE_FOLDER, IGNORE_FOLDER_DEFAULT);
+		optArgs.put(OPT_TMP_COPIES, TMP_COPIES_DEFAULT);
 				
 		return optArgs;
 	}
