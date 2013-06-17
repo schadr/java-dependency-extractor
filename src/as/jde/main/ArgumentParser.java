@@ -6,26 +6,27 @@ import java.util.Map;
 
 public class ArgumentParser {
 	public static final String OPT_REPOSITORY = "--repository";
-	private static final String OPT_REPOSITORY_SHORT = "-r";
+	public static final String OPT_REPOSITORY_SHORT = "-r";
 	public static final String REPOSITORY_GIT = "git";
 	
 	public static final String OPT_OUTPUT_FORMAT = "--output-format";
-	private static final String OPT_OUTPUT_FORMAT_SHORT = "-f";
+	public static final String OPT_OUTPUT_FORMAT_SHORT = "-f";
 	public static final String OUTPUT_XML = "xml";
 	
 	public static final String OPT_IGNORE_FOLDER = "--ignore";
-	private static final String OPT_IGNORE_FOLDER_SHORT = "-i";
+	public static final String OPT_IGNORE_FOLDER_SHORT = "-i";
 	public static final String IGNORE_FOLDER_DEFAULT = "\\b\\B";
 	
 	public static final String OPT_QUEUE_LIMIT = "--queue-size";
-	private static final String OPT_QUEUE_LIMIT_SHORT = "-q";
-	private static final String QUEUE_LIMIT_DEFAULT = "10";
+	public static final String OPT_QUEUE_LIMIT_SHORT = "-q";
+	public static final String QUEUE_LIMIT_DEFAULT = "10";
 	
 	public static final String OPT_TMP_FOLDER = "--folder";
-	private static final String OPT_TMP_FOLDER_SHORT = "-f";
+	public static final String OPT_TMP_FOLDER_SHORT = "-f";
+	
 	public static final String OPT_TMP_COPIES = "--num-copies";
-	private static final String OPT_TMP_COPIES_SHORT = "-n";
-	private static final String TMP_COPIES_DEFAULT = "1";
+	public static final String OPT_TMP_COPIES_SHORT = "-n";
+	public static final String TMP_COPIES_DEFAULT = "1";
 	
 
 	public static final String OPT_REPOSITORY_LOCATION = "repository location";
@@ -41,15 +42,6 @@ public class ArgumentParser {
 							+"\n\t\tnote that by default the git repo specified will be used to check out all versions, even if a tmp folder is specified "
 							+"\n\t\tas long as the number of copies is not greater than 1.");
 		System.out.println("\t"+OPT_TMP_COPIES_SHORT+" number_of_copies | "+OPT_TMP_COPIES+"=number_of_copies\n\t\tspecifies the number of copies of repo made, if a folder for the copies was specified (default=1).");
-	}
-	
-	public static String cleanArgument(String arg, String[] opts) {
-		String ret = arg;
-		for (String opt : opts) {
-			if (ret.startsWith(opt)) ret = ret.replaceFirst(opt, "");
-		}
-		
-		return ret;
 	}
 	
 	public static Map<String, String> parseArguments(String[] args) {
@@ -157,5 +149,14 @@ public class ArgumentParser {
 			return true;
 		}
 		return false;
+	}
+	
+	private static String cleanArgument(String arg, String[] opts) {
+		String ret = arg;
+		for (String opt : opts) {
+			if (ret.startsWith(opt)) ret = ret.replaceFirst(opt, "");
+		}
+		
+		return ret;
 	}
 }
