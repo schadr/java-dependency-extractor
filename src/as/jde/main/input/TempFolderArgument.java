@@ -5,7 +5,7 @@ public class TempFolderArgument extends AbstractArgument {
 	
 	public static final String OPT_TMP_FOLDER = "--folder";
 	public static final String OPT_TMP_FOLDER_SHORT = "-f";
-	public static final String DEFAULT = "";
+	public static final String DEFAULT = "tmp";
 
 	public TempFolderArgument() {
 		super(OPT_TMP_FOLDER, DEFAULT);

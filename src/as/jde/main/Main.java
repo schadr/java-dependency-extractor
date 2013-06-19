@@ -1,6 +1,5 @@
 package as.jde.main;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -9,7 +8,6 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import as.jde.graph.CallGraph;
 import as.jde.main.input.HelpArgument;
 import as.jde.main.input.IgnoreFolderArgument;
 import as.jde.main.input.QueueLimitArgument;
@@ -29,22 +27,19 @@ public class Main {
 			return;
 		}
 		
-		GitController gc = new GitController(optArgs.get(ArgumentParser.OPT_REPOSITORY_LOCATION));
-		SCMIterator iter = new SCMIterator(gc, optArgs.get(IgnoreFolderArgument.OPT_IGNORE_FOLDER));
 		Writer stdout = new OutputStreamWriter(System.out);
 		XMLOutput outputter = new XMLOutput(stdout);
 		ThreadedOutput out = new ThreadedOutput(outputter, Integer.parseInt(optArgs.get(QueueLimitArgument.OPT_QUEUE_LIMIT)));
+
+		CallGraphExtractor extractor = new CallGraphExtractor();
+		GitController gc = new GitController(optArgs.get(ArgumentParser.OPT_REPOSITORY_LOCATION));
+		extractor.setGitController(gc);
+		extractor.setSCMIterator(new SCMIterator(gc, optArgs.get(IgnoreFolderArgument.OPT_IGNORE_FOLDER)));
+		extractor.setOutputter(out);
 		
-		out.start(gc.getRepositoryPath().split(File.separator)[gc.getRepositoryPath().split(File.separator).length-2]);
-		while (iter.hasNext()) {
-			try {
-				CallGraph cg = iter.next();
-				out.add(cg);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		out.stop();
+		extractor.extract();		
+		
+		
 		stdout.close();
 	}
 
