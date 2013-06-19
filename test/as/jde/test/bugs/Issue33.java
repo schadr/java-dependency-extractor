@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import as.jde.main.ArgumentParser;
+import as.jde.main.input.IgnoreFolderArgument;
 import as.jde.output.ThreadedOutput;
 import as.jde.output.XMLOutput;
 import as.jde.scm.SCMIterator;
@@ -38,7 +38,7 @@ public class Issue33 {
 	@Test
 	public void test() throws InterruptedException, IOException {
 		GitController git = new GitController(repoPath);
-		SCMIterator iter = new SCMIterator(git, ArgumentParser.IGNORE_FOLDER_DEFAULT);
+		SCMIterator iter = new SCMIterator(git, IgnoreFolderArgument.IGNORE_FOLDER_DEFAULT);
 		ThreadedOutput out = new ThreadedOutput(new XMLOutput(new Writer() {
 
 			@Override

@@ -1,4 +1,4 @@
-package as.jde.eclipse;
+package as.jde.test.bugs.eclipse;
 
 import java.io.File;
 import java.io.FileFilter;

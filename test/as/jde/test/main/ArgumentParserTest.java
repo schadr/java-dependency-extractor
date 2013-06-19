@@ -6,11 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import as.jde.main.ArgumentParser;
+import as.jde.main.input.IgnoreFolderArgument;
+import as.jde.main.input.OutputArgument;
+import as.jde.main.input.QueueLimitArgument;
+import as.jde.main.input.RepositoryArgument;
+import as.jde.main.input.TempCopiesArgument;
+import as.jde.main.input.TempFolderArgument;
 
 public class ArgumentParserTest {
+	
+	private ArgumentParser argumentParser;
+
+	@Before
+	public void before() {
+		argumentParser = new ArgumentParser();
+	}
 
 	@Test
 	public void shouldParseRepositoryLong() {
@@ -18,9 +32,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addRepositoryLong()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_REPOSITORY));
+		assertTrue(arguments.containsKey(RepositoryArgument.OPT_REPOSITORY));
 	}
 
 	@Test
@@ -29,9 +43,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addRepositoryShort()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_REPOSITORY));
+		assertTrue(arguments.containsKey(RepositoryArgument.OPT_REPOSITORY));
 	}
 	
 	@Test
@@ -40,9 +54,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addOutputFormatLong()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_OUTPUT_FORMAT));
+		assertTrue(arguments.containsKey(OutputArgument.OPT_OUTPUT_FORMAT));
 	}
 
 	@Test
@@ -51,9 +65,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addOutputFormatShort()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_OUTPUT_FORMAT));
+		assertTrue(arguments.containsKey(OutputArgument.OPT_OUTPUT_FORMAT));
 	}
 	
 	@Test
@@ -62,9 +76,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addIgnoreFolderLong()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_IGNORE_FOLDER));
+		assertTrue(arguments.containsKey(IgnoreFolderArgument.OPT_IGNORE_FOLDER));
 	}
 
 	@Test
@@ -73,9 +87,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addIgnoreFolderShort()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_IGNORE_FOLDER));
+		assertTrue(arguments.containsKey(IgnoreFolderArgument.OPT_IGNORE_FOLDER));
 	}
 	
 	@Test
@@ -84,9 +98,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addQueueLimitLong()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_QUEUE_LIMIT));
+		assertTrue(arguments.containsKey(QueueLimitArgument.OPT_QUEUE_LIMIT));
 	}
 
 	@Test
@@ -95,9 +109,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addQueueLimitShort()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_QUEUE_LIMIT));
+		assertTrue(arguments.containsKey(QueueLimitArgument.OPT_QUEUE_LIMIT));
 	}
 	
 	@Test
@@ -106,9 +120,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addTempFolderLong()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_TMP_FOLDER));
+		assertTrue(arguments.containsKey(TempFolderArgument.OPT_TMP_FOLDER));
 	}
 
 	@Test
@@ -117,9 +131,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addTempFolderShort()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_TMP_FOLDER));
+		assertTrue(arguments.containsKey(TempFolderArgument.OPT_TMP_FOLDER));
 	}
 	
 	@Test
@@ -128,9 +142,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addNumberOfTempCopiesLong()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_TMP_COPIES));
+		assertTrue(arguments.containsKey(TempCopiesArgument.OPT_TMP_COPIES));
 	}
 
 	@Test
@@ -139,9 +153,9 @@ public class ArgumentParserTest {
 		String[] args = builder.addNumberOfTempCopiesShort()
 							   .build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_TMP_COPIES));
+		assertTrue(arguments.containsKey(TempCopiesArgument.OPT_TMP_COPIES));
 	}
 	
 	@Test
@@ -156,14 +170,14 @@ public class ArgumentParserTest {
 				.addTempFolderShort()
 				.build();
 		
-		Map<String, String> arguments = ArgumentParser.parseArguments(args);
+		Map<String, String> arguments = argumentParser.parseArguments(args);
 		
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_TMP_COPIES));
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_TMP_FOLDER));
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_QUEUE_LIMIT));
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_IGNORE_FOLDER));
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_OUTPUT_FORMAT));
-		assertTrue(arguments.containsKey(ArgumentParser.OPT_REPOSITORY));
+		assertTrue(arguments.containsKey(TempCopiesArgument.OPT_TMP_COPIES));
+		assertTrue(arguments.containsKey(TempFolderArgument.OPT_TMP_FOLDER));
+		assertTrue(arguments.containsKey(QueueLimitArgument.OPT_QUEUE_LIMIT));
+		assertTrue(arguments.containsKey(IgnoreFolderArgument.OPT_IGNORE_FOLDER));
+		assertTrue(arguments.containsKey(OutputArgument.OPT_OUTPUT_FORMAT));
+		assertTrue(arguments.containsKey(RepositoryArgument.OPT_REPOSITORY));
 	}
 }
 
@@ -175,68 +189,68 @@ class CommandLineArgumentBuilder {
 	}
 
 	public CommandLineArgumentBuilder addNumberOfTempCopiesShort() {
-		arguments.add(ArgumentParser.OPT_TMP_COPIES_SHORT);
-		arguments.add(ArgumentParser.TMP_COPIES_DEFAULT);
+		arguments.add(TempCopiesArgument.OPT_TMP_COPIES_SHORT);
+		arguments.add(TempCopiesArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addNumberOfTempCopiesLong() {
-		arguments.add(ArgumentParser.OPT_TMP_COPIES + "=" + ArgumentParser.TMP_COPIES_DEFAULT);
+		arguments.add(TempCopiesArgument.OPT_TMP_COPIES + "=" + TempCopiesArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addTempFolderShort() {
-		arguments.add(ArgumentParser.OPT_TMP_FOLDER_SHORT);
+		arguments.add(TempFolderArgument.OPT_TMP_FOLDER_SHORT);
 		arguments.add("/tmp");
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addTempFolderLong() {
-		arguments.add(ArgumentParser.OPT_TMP_FOLDER + "=/tmp");
+		arguments.add(TempFolderArgument.OPT_TMP_FOLDER + "=/tmp");
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addQueueLimitShort() {
-		arguments.add(ArgumentParser.OPT_QUEUE_LIMIT_SHORT);
-		arguments.add(ArgumentParser.QUEUE_LIMIT_DEFAULT);
+		arguments.add(QueueLimitArgument.OPT_QUEUE_LIMIT_SHORT);
+		arguments.add(QueueLimitArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addQueueLimitLong() {
-		arguments.add(ArgumentParser.OPT_QUEUE_LIMIT + "=" + ArgumentParser.QUEUE_LIMIT_DEFAULT);
+		arguments.add(QueueLimitArgument.OPT_QUEUE_LIMIT + "=" + QueueLimitArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addIgnoreFolderShort() {
-		arguments.add(ArgumentParser.OPT_IGNORE_FOLDER_SHORT);
-		arguments.add(ArgumentParser.IGNORE_FOLDER_DEFAULT);
+		arguments.add(IgnoreFolderArgument.OPT_IGNORE_FOLDER_SHORT);
+		arguments.add(IgnoreFolderArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addIgnoreFolderLong() {
-		arguments.add(ArgumentParser.OPT_IGNORE_FOLDER + "=" + ArgumentParser.IGNORE_FOLDER_DEFAULT);
+		arguments.add(IgnoreFolderArgument.OPT_IGNORE_FOLDER + "=" + IgnoreFolderArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addOutputFormatShort() {
-		arguments.add(ArgumentParser.OPT_OUTPUT_FORMAT_SHORT);
-		arguments.add(ArgumentParser.OUTPUT_XML);
+		arguments.add(OutputArgument.OPT_OUTPUT_FORMAT_SHORT);
+		arguments.add(OutputArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addOutputFormatLong() {
-		arguments.add(ArgumentParser.OPT_OUTPUT_FORMAT + "=" + ArgumentParser.OUTPUT_XML);
+		arguments.add(OutputArgument.OPT_OUTPUT_FORMAT + "=" + OutputArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addRepositoryShort() {
-		arguments.add(ArgumentParser.OPT_REPOSITORY_SHORT);
-		arguments.add(ArgumentParser.REPOSITORY_GIT);
+		arguments.add(RepositoryArgument.OPT_REPOSITORY_SHORT);
+		arguments.add(RepositoryArgument.DEFAULT);
 		return this;
 	}
 
 	public CommandLineArgumentBuilder addRepositoryLong() {
-		arguments.add(ArgumentParser.OPT_REPOSITORY + "=" + ArgumentParser.REPOSITORY_GIT);
+		arguments.add(RepositoryArgument.OPT_REPOSITORY + "=" + RepositoryArgument.DEFAULT);
 		return this;
 	}
 }
